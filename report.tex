@@ -1,0 +1,91 @@
+\documentclass[a4paper,12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[english]{babel}
+\usepackage{etoc}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+% Redefine the relevant code for the \part command.
+\makeatletter
+\renewcommand\part{%
+  \if@openright
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+  \thispagestyle{empty}%	Original »plain« replaced by »emptyx.
+  \setcounter{page}{1}
+  \if@twocolumn
+    \onecolumn
+    \@tempswatrue
+  \else
+    \@tempswafalse
+  \fi
+  \null\vfil
+  \secdef\@part\@spart}
+\makeatother
+
+\newcommand{\EPITA}{\textsc{Epita}}
+
+\newcommand{\email}[1]{\href{mailto:#1}{\textcolor{blue}{#1}}}
+\newcommand{\supervisor}[1]{\textcolor{gray}{#1}}
+
+% Title Page
+\title{Implementation of \(\omega\)-automata minimization techniques in "Spot",
+a model checking library.}
+
+\author{Alexandre Gbaguidi Aïsse\\Student in second year of computer engineering
+at \EPITA \\\email{gbagui\_a@epita.fr}, \email{aga@lrde.epita.fr}
+\\\\\supervisor{Alexandre Duret-Lutz}}
+
+\date{Janvier 2017 \url{https://spot.lrde.epita.fr}}
+
+\begin{document}
+\maketitle
+\etocdepthtag.toc{mtchapter}
+\etocsettagdepth{mtchapter}{subsection}
+\etocsettagdepth{mtappendix}{none}
+\tableofcontents
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+
+\part{Report}
+\input{lrde.tex}
+\input{basics.tex}
+\input{spot.tex}
+\input{work.tex}
+\input{biblio.tex}
+
+% Redefine the relevant code of \part command for Appendix.
+\makeatletter
+\renewcommand\part{%
+  \if@openright
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+  \thispagestyle{empty}%	Original »plain« replaced by »emptyx.
+  \pagenumbering{roman}%	Restart numbering in roman style.
+  \if@twocolumn
+    \onecolumn
+    \@tempswatrue
+  \else
+    \@tempswafalse
+  \fi
+  \null\vfil
+  \secdef\@part\@spart}
+\makeatother
+
+\appendix
+\part{Appendix}
+\etocdepthtag.toc{mtappendix}
+\etocsettagdepth{mtchapter}{none}
+\etocsettagdepth{mtappendix}{subsection}
+\etoctocstyle{1}{Contents (Appendix)}
+\tableofcontents
+
+\chapter{Company documentation}
+\chapter{Hardware / Software Documentation}
+\chapter{Gross results}
+
+\end{document}
