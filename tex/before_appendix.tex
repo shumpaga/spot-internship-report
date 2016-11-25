@@ -1,0 +1,28 @@
+% Some configurations before appendix.
+
+% Redefine the relevant code of \part command for Appendix.
+\makeatletter
+\renewcommand\part{%
+  \if@openright
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+  \thispagestyle{empty}%	Original »plain« replaced by »emptyx.
+  \pagenumbering{roman}%	Restart numbering in roman style.
+  \if@twocolumn
+    \onecolumn
+    \@tempswatrue
+  \else
+    \@tempswafalse
+  \fi
+  \null\vfil
+  \secdef\@part\@spart}
+\makeatother
+
+\part{Appendix}
+\etocdepthtag.toc{mtappendix}
+\etocsettagdepth{mtchapter}{none}
+\etocsettagdepth{mtappendix}{subsection}
+\etoctocstyle{1}{Contents (Appendix)}
+\tableofcontents
