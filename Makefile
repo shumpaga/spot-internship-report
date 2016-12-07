@@ -1,3 +1,6 @@
+all:
+	pdflatex report.tex
+
 clean:
 	rm -rf *.aux
 	rm -rf *.log
@@ -7,3 +10,5 @@ clean:
 
 distclean: clean
 	rm -rf *.pdf
+
+.PHONY: clean distclean
