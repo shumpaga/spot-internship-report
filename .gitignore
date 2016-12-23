@@ -4,3 +4,8 @@
 *.backup
 *.out
 *-swp
+*.bcf
+*.blg
+*.run.xml
+*-blx.bib
+*.bbl
