@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt, twoside]{report}
+\documentclass[a4paper,12pt,twoside]{report}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
@@ -6,8 +6,14 @@
 \usepackage{etoc}
 \usepackage{layout}
 \usepackage{url}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage[backend=bibtex,style=numeric-comp]{biblatex}
 
 \usepackage{style} % Local package.
+
+\bibliography{bib/references.bib}
 
 \begin{document}
 \input{./tex/title_page.tex}%			Title page.
