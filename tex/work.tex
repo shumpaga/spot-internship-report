@@ -1,6 +1,5 @@
 \chapter{Completed work}
 
-
 \section{Specifications}
 This section tries to shed light on what was before this internship and why all the achieved work was
 needed.
@@ -143,7 +142,7 @@ Spot requires a SAT solver to be installed on the same machine and provides a wa
 SPOT\_SATSOLVER environment variable). obviously, being linked to a SAT solver and make calls to its
 functions will be more efficient than making Input/Output operations and executing another binary.\\
 
-The memory conssumption is also another problem. The larger the automaton is, the more variables there are.
+The memory consumption is also another problem. The larger the automaton is, the more variables there are.
 With some automata, the memory usage could grow over 150 Go which is uncommon for most users. The figure
 \ref{fig:over_memory} helps to see memory usage peaks during a benchmark realized the end of September
 2016.\\
@@ -156,7 +155,49 @@ With some automata, the memory usage could grow over 150 Go which is uncommon fo
 \end{figure}
 
 \subsection{Detailed explanation of the results to be obtained}
+As said before, the purpose of this internship is to improve the current SAT-based minimization technique.
+This minimization is wanted to be more fast and less greedy in memory consumption.
+If you look at the tool chain section above, this internship intervenes in the two SAT minimization
+rectangles (for $m=1$ and $m > 1$).\\
 
+The idea of testing an incremental approach for SAT-based minimization has already been raised by the Spot
+team. \textit{Alexandre Duret-Lutz} had a clear idea of how to do it and I had been assigned the task of
+testing this idea. The objective being to improve it as mush as possible, the internship is not limited
+to that. It is a line of approach as many others and the results to obtain can lead to new reflections.\\
+
+\begin{algorithm}[H]
+ \caption{An incremental approach that does the same traditional encoding once and then tries to exclude
+          one more state at each iteration of a loop. The encoding is never restarted.}\label{naive}
+ \begin{algorithmic}[1]
+  \Procedure{\textsc{ReduceStatesDTGBA}$(R,m=R$.nb\_acc\_sets()$)$}{}
+   \State $n \gets R.nb\_states() $
+   \State $C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $
+   \If {$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \BState \emph{repeat}:
+   \State add clauses to exclude one more state
+   \State $C \gets$ Try to solve the new problem and build the new automaton
+   \If {$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \State $R \gets C$
+  \EndProcedure
+ \end{algorithmic}
+\end{algorithm}
+
+To do so, Spot needs to be linked to a SAT solver library. The really first task is to know which. I had
+to find the more suitable SAT solver that fills those requirements:
+\begin{itemize}
+ \item It must have a compatible licence with Spot's one. Spot is under a GNU General Public Licence 3.
+ \item It must be simple to integrate with Spot. Simple means here that the code shall be modified as little
+       as possible so that a future update to a newer version of that solver will be simple to achieve.
+ \item Of course, it has to be performant. Therefore, a look to SAT solvers international competitions as
+       well as a custom benchmark is a fundamental need.
+\end{itemize}
+
+\noindent Regarding the memory consumption, the purpose is to identify the most memory-hungry parts of the
+source code and come up with solutions.\\
+
+The results to be obtained can not be more precise than that. There is no precise figure estimating the
+speed to reach for a particular formula or the exact memory consumption to reduce, etc. It is an internship
+that is part of a research work. By definition, the results are often unpredictable.
 
 \section{Activity report}
 \subsection{Selected areas of study and research}
