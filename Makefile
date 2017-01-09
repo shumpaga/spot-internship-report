@@ -13,6 +13,7 @@ clean:
 	rm -rf *.run.xml
 	rm -rf *-blx.bib
 	rm -rf *.bbl
+	rm -rf *.pyg
 
 distclean: clean
 	rm -rf *.pdf
