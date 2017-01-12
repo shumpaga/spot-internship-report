@@ -14,6 +14,7 @@ clean:
 	rm -rf *-blx.bib
 	rm -rf *.bbl
 	rm -rf *.pyg
+	rm -rf *.backup
 
 distclean: clean
 	rm -rf *.pdf

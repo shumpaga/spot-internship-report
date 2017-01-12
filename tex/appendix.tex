@@ -1,0 +1,24 @@
+\chapter{Company documentation}
+\chapter{Hardware / Software Documentation}
+
+\begin{landscape}
+\chapter{Gross results}
+
+\section{Benchmarks}
+Any benchmark added in this section follows the same chart legend:\\
+\begin{itemize}
+ \item Column \textbf{type} shows how the initial det. aut. was obtained: T = translation produces DTGBA;
+       P = powerset construction transforms TBA to DTBA; R = DRA to DBA.
+ \item Column \textbf{C.} tells whether the output automaton is complete: rejecting sink states are always
+       omitted (add 1 state when C=0 if you want the size of the complete automaton).
+ \item For each formula, green columns correspond to best minDBA time and yellow columns to best minDTGBA
+       time.
+\end{itemize}
+
+\subsection{External Glucose vs first incremental approach}
+\label{glu_vs_incr1_complete}
+The following table shows the results of the benchmark that compared the old default SAT-based minimization
+(using Glucose) to the first incremental approach (using PicoSAT library):\\
+\input{./tex/bench/glu_vs_incr1.tex}%			 First table
+
+\end{landscape}

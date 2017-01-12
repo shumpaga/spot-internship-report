@@ -32,7 +32,8 @@ of states and arbitrary acceptance condition.\\
 \noindent Using this tool, two minimization algorithms have been implemented:
 \begin{algorithm}[H]
  \caption{A naive algorithm that calls \textsc{Synthetize}DTGBA$(R,n,m)$ in a loop, with a decreasing
-          number of states, and returns the last successfully built automaton.}\label{naive}
+          number of states, and returns the last successfully built automaton.}
+ \label{naive}
  \begin{algorithmic}[1]
   \Procedure{\textsc{ReduceStatesDTGBA}$(R,m=R$.nb\_acc\_sets()$)$}{}
    \BState \emph{repeat}:
@@ -46,7 +47,8 @@ of states and arbitrary acceptance condition.\\
 
 \begin{algorithm}[H]
  \caption{This also calls \textsc{Synthetize}DTGBA$(R,n,m)$ in a loop, but attempting to find the minimum
-          number of states using a binary search.}\label{dicho}
+          number of states using a binary search.}
+ \label{dicho}
  \begin{algorithmic}[1]
   \Procedure{\textsc{DichotomyDTGBA}$(R,m=R$.nb\_acc\_sets()$)$}{}
    \State $max\_states \gets R.nb\_states()-1$
@@ -168,7 +170,8 @@ to that. It is a line of approach as many others and the results to obtain can l
 
 \begin{algorithm}[H]
  \caption{An incremental approach that does the same traditional encoding once and then tries to exclude
-          one more state at each iteration of a loop. The encoding is never restarted.}\label{naive}
+          one more state at each iteration of a loop. The encoding is never restarted.}
+ \label{incr1}
  \begin{algorithmic}[1]
   \Procedure{\textsc{ReduceStatesDTGBA}$(R,m=R$.nb\_acc\_sets()$)$}{}
    \State $n \gets R.nb\_states() $

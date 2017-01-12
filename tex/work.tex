@@ -32,7 +32,7 @@ The next three figures (\ref{fig:satchoose_1}, \ref{fig:satchoose_2} and \ref{fi
 comparaisons for three formulas. About twenty formulas have been tested in two modes: by forcing the number
 of state and by doing the complete cycles of minimization. It has been executed on a computer with an
 \textbf{Intel(R) Core(TM) i7-4710HQ CPU @ 2.50GHz} processor and  a \textbf{8 GiB} system memory.
-The measuring tool used is the open Google Benchmark tool \cite{21}.
+The measuring tool used is the open Google Benchmark tool \cite{22}.
 
 \begin{figure}[H]
  \centering
@@ -64,13 +64,13 @@ have a look.
 
 \section{New Satsolver class}
 There was already a satsolver class that is instantiated at the beginning of the SAT-based minimization
-procedures, formerly used to initialize a temporary \textbf{cnf file} (DIMACS \cite{18}) and return
-it. The file writing was directly made by those procedures.
+procedures, formerly used to initialize a temporary \textbf{cnf file} (DIMACS \cite{18}), return
+it and call the external SAT solver. The file writing was directly made by those procedures.
 
 \noindent The objective is to completely abstract the file writing. SAT-based minimization procedures will
 just have to instantiate a satsolver object at the beginning and make calls to its functions. Thoses
-functions will call the SAT solving library functions. But as we still want to support any external
-satsolver, this class must continue to handle temporary \textbf{cnf files}.\\
+functions will call the SAT solving library functions. But this class must continue to support any external
+SAT solver by handling temporary \textbf{cnf files}.\\
 
 \begin{figure}[h]
   \centering
@@ -98,26 +98,124 @@ satsolver, this class must continue to handle temporary \textbf{cnf files}.\\
   \label{fig:sat_uml}
 \end{figure}
 
-\noindent The figure \ref{fig:sat_uml} shows a pseudo UML representation of the new satsolver class. It can either
-initialize PicoSAT or a cnf\_stream\_. The idea is to let its function (add, comment, etc.) to decide
-if they call PicoSAT functions or write in the cnf\_stream\_. That way, SAT-based minimization procedures
-are not aware of what's going on behind and can repeat over and over again the same algorithms.\\
+\noindent The figure \ref{fig:sat_uml} shows an approximate UML representation of the new satsolver class.
+It can either initialize PicoSAT or a cnf\_stream\_. The idea is to let its functions (add, comment, etc.)
+to decide if they call PicoSAT functions or write in the cnf\_stream\_. That way, SAT-based minimization
+procedures are not aware of what's going on behind and can repeat over and over again the same algorithms.\\
 
 \noindent Of course the clause counting mechanism is provided by the new satsolver class. At the end,
 SAT-based procedures will just have to call the \textit{get\_solution()} method.\\
 
-Once this was done, SAT-based procedures had already gained some speed. For instance, with this command
+Once this was done, SAT-based procedures had already gained some speed which is entirely understandable as
+disk operations are slow. For instance, with this command
 line:
 \begin{lstlisting}[language=bash,caption={bash command-line to test a formula minimization using ltl2tgba}]
   time ltl2tgba -D -x sat-minimize 'G(a -> Fb) & G(c -> Fd)'
                         --stats='states=%s, det=%d’
 \end{lstlisting}
-we obtained:\\\\
+This result is obtained on a Macbook pro with \textbf{2,9GHz intel core i5} and
+\textbf{8 Go 1867 Mhz DDR3}:\\\\
 \begin{tabular}{|c|c|}
  \hline
- Version & Result\\
+ &\\
+ PicoSAT as & Time result\\
+ &\\
  \hline
- PicoSAT as linked SAT solving library&0.29s user 0.08s system 98\% cpu 0.371 total\\
- PicoSAT as external SAT solver&0.82s user 0.09s system 98\% cpu 0.925 total\\
+ &\\
+ linked SAT solving library&0.29s user 0.08s system 98\% cpu 0.371 total\\
+ external SAT solver (with disk operations)&0.82s user 0.09s system 98\% cpu 0.925 total\\
+ &\\
  \hline
 \end{tabular}
+
+\section{First incremental approach}
+Just as a reminder, until now, SAT-based minimization procedures whether it is with binary search
+(algorithm \ref{dicho}) or the naive way (algorithm \ref{naive}), starts the SAT encoding from scratch
+at each step of the cycle of minimization; that is unfortunate. This is why an incremental approach
+has been considered.\\
+
+\noindent  The algorithm \ref{incr1} has been implemented. Starting with an $\omega$-automaton of size
+$n$, if the first iteration (which encodes the research of an $\omega$-automaton of size $n-1$) constructs
+an automaton of $k$ ($k \leq n-1$) states \textit{accessible}, then some clauses are added to forbid all the
+entrant transitions of the $n-k-1$ last state. If such automaton is found, the entrant transitions of the
+$n-k-2$ last state are also forbidden, etc. The last SAT problem solved correspond to the minimal
+automaton.\\
+
+\noindent An interesting thing, as a sideline, is that at the beginning, instead of forbidding the entrant
+transitions of a state, the outgoing transitions were forbidden. This did not work, because those
+clauses were in contradiction with the first rule of the encoding (which stated that the automaton must be
+\textit{complete}), causing an absurdity. All the rules of the encoding are described in the papers
+\cite{14} and \cite{15}.\\
+
+\noindent After this method has been implemented (algorithm \ref{incr1}), a benchmark has been realized to
+compare it to the old default method (algorithm \ref{naive}). For dispay reasons, only a few interesting
+lines of the results are displayed in the figure \ref{fig:glu_vs_incr1_short}. Feel free to have a look
+in the \ref{glu_vs_incr1_complete} section of the appendix to see all the results. For each version and
+each formula, two minimizations are attempted, büchi \textit{acceptance set} and
+\textit{generalized büchi acceptance set}. The best performances for each formula are colorized
+respectively in green and yellow.
+
+\begin{figure}[H]
+ \centering
+ \fontsize{9}{11}\selectfont{
+ \setlength\LTleft{0pt}% default: \parindent
+ \setlength\LTright{0pt}% default: \fill
+ \begin{longtable}{@{\extracolsep{\fill}}|*{5}{c|}}
+  \hline
+  \multirow{3}{*}{Formulas}&\multicolumn{4}{c|}{Time (seconds)}\\
+  &\multicolumn{2}{c|}{Glucose (As before)}&\multicolumn{2}{c|}{Incr Naive}\\
+  &minDBA&minDTGBA&minDBA&minDTGBA\\
+  \hline
+  $F(a \land  GFb) \lor  (Fc \land  Fa \land  F(c \land  GF\bar b))$&0.02&\cellcolor{Yelw} 57.65&\cellcolor{Green} 0.01&236.36\\
+  $XXG(Fa U Xb)$&25.15&\cellcolor{Yelw} 762.74&\cellcolor{Green} 20.21&(killed)\\
+  $(a R (b R Fc)) W XGb$&(killed)&\cellcolor{Yelw} 254.19&(killed)&672.80\\
+  $X(\bar a \land  Fa) R (a M Fb)$&2.19&\cellcolor{Yelw} 46.12&\cellcolor{Green} 1.7&132.02\\
+  $(a R Fb) U X\bar c$&(killed , $\le$ 11)&\cellcolor{Yelw} 389.87&(killed , $\le$ 11)&616.70\\
+  \hline
+ \end{longtable}}
+ \caption{Parts of \ref{glu_vs_incr1_complete} benchmark results showing some cases where the Old SAT-based
+          minimization is still better}
+ \label{fig:glu_vs_incr1_short}
+\end{figure}
+
+In all the lines of the figure \ref{fig:glu_vs_incr1_short}, \textbf{glucose} is still better than our first
+incremental approach. There is even a case where \textbf{naive incr} never ends the minimization and
+is killed.
+
+In order to better compare both version, this generated figure counts the number of times a version is better
+than the other with a tolerance of more or less five percents (5\%). That means roughly equal times are skipped.
+\begin{figure}[H]
+ \centering
+ \input{tex/bench/glu_vs_incr1_resume.tex}
+ \caption{Summary of \ref{glu_vs_incr1_complete} benchmark}
+ \label{fig:glu_vs_incr1_resume}
+\end{figure}
+
+The next two figures (\ref{fig:glu_vs_incr1_dba} and \ref{fig:glu_vs_incr1_dtgba}) shows two graphs generated
+with ggplot2 \cite{23} (a graphing package implemented in top of the \textbf{R} statistical package). Any
+point between the two lines passing through the origin is in the tolerance area (more or less 5\%). All the
+bothering points (cases where glucose win) are located in the area over both lines. Obvisouly, the
+first incremental approach wins when points are located under both lines.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.6]{img/glu_vs_incr1_dba.png}
+ \caption{Graph comparing both minDBA time of minimization}
+ \label{fig:glu_vs_incr1_dba}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.6]{img/glu_vs_incr1_dtgba.png}
+ \caption{Graph comparing both minDTGBA time of minimization}
+ \label{fig:glu_vs_incr1_dtgba}
+\end{figure}
+
+\noindent In light of the above, this incremental approach does not seem to be the most appropriate method.
+This is really surprising. Why all that the SAT solver learned while solving the first traditional encoding
+did not help him to solve quickly the next similar problems?\\
+
+An hypothesis raised is that may be the fact that the size of the problem is never decreased affect it? By
+restarting the encoding from scratch at each step, the Old SAT-based minimization also restarts with a
+smaller automaton. The smaller the input automaton is, the smaller the SAT problem produced is (with a
+decreasing number of litterals and clauses).
