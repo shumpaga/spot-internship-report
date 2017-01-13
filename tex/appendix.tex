@@ -21,4 +21,38 @@ The following table shows the results of the benchmark that compared the old def
 (using Glucose) to the first incremental approach (using PicoSAT library):\\
 \input{./tex/bench/glu_vs_incr1.tex}%			 First table
 
+\subsection{External Glucose vs a not total incremental approach}
+\label{glu_vs_incr2_complete}
+The following table shows the results of the benchmark that compared the old default SAT-based minimization
+(using Glucose) to the second incremental approach (using PicoSAT library):\\
+\input{./tex/bench/glu_vs_incr2.tex}%			 Second table
+
+\section{Heap memory profiling}
+\label{memory_profiling}
+
+The following figures (\ref{fig:memory_before} and \ref{fig:memory_now}) shows memory consumption
+of SAT-based minimization of an input automaton produced with this formula: $G(F(!a) | (F(b) U c))$.
+
+In both cases, \textbf{Glucose} is used as external SAT solver. We now consume 23 Mb
+(figure \ref{memory_now}) instead of 29,9 (figure \ref{fig:memory_before}). Have in mind that
+this formula start the minimization with an automaton of 8 states and the more bigger the automaton is, the
+more memory-hungry SAT-based minimization is.
+
+\subsection{Before Optimizations}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.6]{img/memory_before.png}
+ \caption{Memory heap consumption before optimizations}
+ \label{fig:memory_before}
+\end{figure}
+
+\subsection{After Optimizations}
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.6]{img/memory_now.png}
+ \caption{Memory heap consumption before optimizations}
+ \label{fig:memory_now}
+\end{figure}
+
 \end{landscape}

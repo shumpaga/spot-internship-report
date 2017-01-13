@@ -30,6 +30,7 @@
 \fancyfoot[LE,RO]{\thepage}
 \fancyfoot[LO,CE]{Chapter \thechapter}
 \fancyfoot[CO,RE]{\textsc{Gbaguidi Aïsse} Alexandre}
+% Layout configurations
 
 % Bash code configuration
 \lstset{basicstyle=\ttfamily,
@@ -37,6 +38,7 @@
   commentstyle=\color{red},
   keywordstyle=\color{blue}
 }
+% Bash code configuration
 
 % Figure layout
 \setcounter{topnumber}{2}
@@ -50,15 +52,19 @@
 \setlength{\floatsep}{5pt plus 2pt minus 2pt}
 \setlength{\textfloatsep}{5pt plus 2pt minus 2pt}
 \setlength{\intextsep}{5pt plus 2pt minus 2pt}
+% Figure layout
 
 % Some commands:
 \newcommand{\EPITA}{\textsc{Epita}}
 \newcommand{\LRDE}{\textsc{Lrde}}
 \newcommand{\VCSN}{\textsc{Vcsn }}
+% Some commands:
 
-\makeatletter % Function used in algorithmic pseudo code for word such as 'repeat:'
+% Function used in algorithmic pseudo code for word such as 'repeat:'
+\makeatletter 
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
+% Function used in algorithmic pseudo code for word such as 'repeat:'
 
 % Redefine the relevant code for the \part command.
 \makeatletter

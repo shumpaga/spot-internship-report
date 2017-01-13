@@ -129,6 +129,7 @@ This result is obtained on a Macbook pro with \textbf{2,9GHz intel core i5} and
 \end{tabular}
 
 \section{First incremental approach}
+\label{approach1}
 Just as a reminder, until now, SAT-based minimization procedures whether it is with binary search
 (algorithm \ref{dicho}) or the naive way (algorithm \ref{naive}), starts the SAT encoding from scratch
 at each step of the cycle of minimization; that is unfortunate. This is why an incremental approach
@@ -182,8 +183,9 @@ In all the lines of the figure \ref{fig:glu_vs_incr1_short}, \textbf{glucose} is
 incremental approach. There is even a case where \textbf{naive incr} never ends the minimization and
 is killed.
 
-In order to better compare both version, this generated figure counts the number of times a version is better
-than the other with a tolerance of more or less five percents (5\%). That means roughly equal times are skipped.
+In order to better compare both version, this generated figure counts the number of times a version is
+better than the other with a tolerance of more or less five percents (5\%). That means: roughly equal times
+are skipped.
 \begin{figure}[H]
  \centering
  \input{tex/bench/glu_vs_incr1_resume.tex}
@@ -219,3 +221,305 @@ An hypothesis raised is that may be the fact that the size of the problem is nev
 restarting the encoding from scratch at each step, the Old SAT-based minimization also restarts with a
 smaller automaton. The smaller the input automaton is, the smaller the SAT problem produced is (with a
 decreasing number of litterals and clauses).
+
+\section{A not total incremental approach}
+\label{approach2}
+With a view to verify the last hypothesis, a similar approach has been proposed.
+The idea is to provide the opportunity to choose how many times SAT-based
+minimization should work incrementally before restarting the encoding from scratch. Here times can be seen
+in two ways. It can be either the number of states to reduce or just a number of attemps before
+restarting the encoding. The second way has been chosen because gaining many states when only one is
+expected is unpredictable.\\
+
+Here is how the algorithm looks like ($s$ means sat\_incr\_steps and stands for the number of attempts).
+
+\begin{algorithm}[H]
+ \caption{This incremental approach attemps a traditional encoding and then tries to exclude
+          $s$ states incrementally before restarting the encoding from scratch.}
+ \label{incr2}
+ \begin{algorithmic}[1]
+  \Procedure{\textsc{ReduceStatesDTGBA}$(R,m=R$.nb\_acc\_sets()$, s)$}{}
+   \BState \emph{repeat}:
+   \State{$n \gets R.nb\_states() $}
+   \State{$C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $}
+   \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \For{$i = 0$; $i < s;$ ++$i$}
+    \State{add clauses to exclude one more state}
+    \State{$C \gets$ Try to solve the new problem and build the new automaton}
+    \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
+    \State{$R \gets C$}
+   \EndFor
+  \EndProcedure
+ \end{algorithmic}
+\end{algorithm}
+
+Again, once this was implemented, a new benchmark was made. Different values for $s$ has been tested:
+$1, 2, 4$ and $8$, $2$ was the best value between them. Again, for some display reasons, only this version
+is displayed in comparaison to the Old SAT-based minimization in the figure \ref{fig:glu_vs_incr2_short}
+and in the appendix \ref{glu_vs_incr2_complete}.
+
+\begin{figure}[H]
+ \centering
+ \fontsize{9}{11}\selectfont{
+ \setlength\LTleft{0pt}% default: \parindent
+ \setlength\LTright{0pt}% default: \fill
+ \begin{longtable}{@{\extracolsep{\fill}}|*{5}{c|}}
+  \hline
+  \multirow{3}{*}{Formulas}&\multicolumn{4}{c|}{Time (seconds)}\\
+  &\multicolumn{2}{c|}{Glucose (As before)}&\multicolumn{2}{c|}{Incr Naive}\\
+  &minDBA&minDTGBA&minDBA&minDTGBA\\
+  \hline
+  $F(a \land  GFb) \lor  (Fc \land  Fa \land  F(c \land  GF\bar b))$&0.02&\cellcolor{Yelw} 57.65&\cellcolor{Green} 0.01&237.43\\
+  $XXG(Fa U Xb)$&25.15&\cellcolor{Yelw} 762.74&\cellcolor{Green} 12.48&(killed)\\
+  $(a R (b R Fc)) W XGb$&(killed)&\cellcolor{Yelw} 254.19&(killed)&778.38\\
+  $G(XX F a U (a \lor b \lor Fc))$&\cellcolor{Green}262.56&(killed)&501.21&(killed)\\
+  $X(\bar a \land  Fa) R (a M Fb)$&2.19&\cellcolor{Yelw}46.12&\cellcolor{Green}1.71&129.43\\
+  $(a R Fb) U X\bar c$&(killed , $\le$ 11)&\cellcolor{Yelw} 389.87&(killed , $\le$ 11)&425.21\\
+  \hline
+ \end{longtable}}
+ \caption{Parts of \ref{glu_vs_incr2_complete} benchmark results showing some cases where the Old SAT-based
+          minimization is still better}
+ \label{fig:glu_vs_incr2_short}
+\end{figure}
+
+The figure \ref{fig:glu_vs_incr2_resume} had the same purpose of the figure
+\ref{fig:glu_vs_incr1_resume}, that means with a tolerance of more or less five percents, couting
+for minDBA and minDTGBA the number of times each version is better than each of the others for
+each formula.\\
+
+\begin{figure}[H]
+ \centering
+ \input{tex/bench/glu_vs_incr2_resume.tex}
+ \caption{Summary of the comparaison between Old SAT-based minimization (Glucose) and the second incremental
+          approach with different values for $s$ : $1, 2, 4$ and $8$}
+ \label{fig:glu_vs_incr2_resume}
+\end{figure}
+
+\noindent In the figure \ref{fig:glu_vs_incr2_resume}, it is also noticeable that the new incremental
+approach (algorithm \ref{incr2}) with $s = 2$ seems to give a better performance than the first approach.
+It is 33 and 21 times better than \textbf{incr1} against 9 and 15 times (in favour of \textbf{incr1})
+respectively for minDBA and minDTGBA.\\
+
+\noindent Up to this time, SAT solvers assumptions have not been tested. This is the subject of the next
+section.
+
+\section{Assumptions approach}
+In incremental SAT solving, assumptions are propositions that, once assumed, hold only for the next
+invocation of the solver. After that, all the assumption expect to be assumed again. The SAT solver, when
+asked for a solution, consider all the basic clauses and the assumed assumptions. That is interesting
+because it makes possible to keep the basic rules and mix them with different hypothesis at each call.\\
+
+In our case, the basic rules are obvisouly the traditional encoding and the hypothesis are the removal
+of states. For a better understanding let us consider the following figure (\ref{fig:cnf_assume}). The
+first area represent the traidtional encoding. After that, some new variables are introduced
+($x_1$, $x_2$, $x_3$, ...), so that each of them represent an assumption that can be assumed.
+All the assumptions add some clauses to forbid the entrant transitions of one state and implies the
+previous assumption except the first one ($x_1$) that does not have any assumption previously declared.\\
+
+\begin{figure}[H]
+ \centering
+ \begin{tabular}{|c|c|c|}
+ 
+ \hline
+ Areas&File&Some explanations\\
+ \hline
+ \multirow{4}{*}{1}&.............&\multirow{4}{*}{Basic clauses}\\
+ &.............&\\
+ &.............&\\
+ &.............&\\
+ \hline
+ \multirow{6}{*}{2}&$x_1$ => .......&\multirow{6}{*}{$x_1$ forbid one more state}\\
+ &$x_1$ => .......&\\
+ &$x_1$ => .......&\\
+ &.&\\
+ &.&\\
+ &.&\\
+ \hline
+ \multirow{7}{*}{3}&$x_2$ => .......&\multirow{7}{*}{$x_2$ forbid one more state}\\
+ &$x_2$ => .......&\\
+ &$x_2$ => .......&\\
+ &.&\\
+ &.&\\
+ &.&\\
+ &$x_2$ => $x_1$&$x_2$ implies $x_1$\\
+ \hline
+ \multirow{7}{*}{4}&$x_3$ => .......&\multirow{7}{*}{$x_3$ forbid one more state}\\
+ &$x_3$ => .......&\\
+ &$x_3$ => .......&\\
+ &.&\\
+ &.&\\
+ &.&\\
+ &$x_3$ => $x_2$&$x_3$ implies $x_2$\\
+ \hline
+ .&.&.\\
+ .&.&.\\
+ .&.&.\\
+ \hline
+ \end{tabular}
+ \caption{}
+ \label{fig:cnf_assume}
+\end{figure}
+
+In this way, after a first attempt (just with the basic clauses, no assumptions) succeeds, when:
+\begin{itemize}
+ \item $x_1$ is assumed, it attempts to forbid one more state
+ \item $x_2$ is assumed, it attempts to forbid two more states (the one it forbids and the one forbidden
+       by $x_1$)
+ \item $x_3$ is assumed, it attempts to forbid three more states (the one it forbids and the two forbidden
+       by $x_2$)
+ \item etc.
+\end{itemize}
+
+\noindent As a reminder, the difference between the first two incremental approach
+(\ref{approach1} and \ref{approach2}) is that the first one never restarts the encoding and the second
+restarts the encoding depending on a given parameter $s$. In order to
+conserve this possibility, the number of assumptions corresponds to this paramater as well. So this is
+how the algorithm works:\\
+
+\begin{algorithm}[H]
+ \caption{}
+ \label{assume}
+ \begin{algorithmic}[1]
+  \Procedure{\textsc{ReduceStatesDTGBA}$(R,m=R$.nb\_acc\_sets()$, s)$}{}
+   \BState \emph{repeat}:
+   \State{$n \gets R.nb\_states() $}
+   \State{$C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $}
+   \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \State{Add $s$ assumptions}
+   \State{Assume the last assumptions //which assumes every assumptions}
+   \State{$C \gets$ Try to solve the new problem and build the new automaton}
+   \If{$C$ \textbf{does not exists}}
+    \State{\Return{binary\_search(R, $R.size()-1$ as \textbf{max}, 1 as \textbf{min})}}
+   \Else
+    \State{$R \gets C$}
+    \State{Go to repeat}
+   \EndIf
+  \EndProcedure
+ \end{algorithmic}
+\end{algorithm}
+
+Another interesting story, is that at the beginning, the first assumption
+approach was a bit different and did not work at all. When some assumptions have been made and a SAT
+problem is unsatisfiable (that means there is no solution), some SAT solvers (including PicoSAT) provide a
+way to ask: is the problem unsatisfiable because of this assumption or this one, etc. ?
+So, the encoding was exactly the same as the figure \ref{fig:cnf_assume} but at the beginning each of
+the assumptions were assumed - not all the assumptions through the last one but really each of them.
+If such automaton is found, the process will restart, otherwise it loops over each assumption, asking the
+solver is it the one that mislead you? Or is it that one? For reasons still unknown, PicoSAT was not able
+to identify the assumption that failed. If you are interested, this implementation still exists in the
+\textbf{aga/assumesat1} branch of the Spot project
+\url{https://gitlab.lrde.epita.fr/spot/spot/tree/aga/assumesat1}.
+
+\section{Memory optimization}
+During the internship, benchmarks were firstly run on a cluster with Xeon E5-2620 2.00GHz cpu, 12
+physical cores and 256 GO DDR3 of RAM memory. Many benchmarks have been ignored because memory was
+swapping. We were forced to move to a cluster with Intel(R) Xeon(R) CPU E7- 2860  @ 2.27GHz, 20 physical
+cores and 512 GO DDR3 to continue the experiments.\\
+
+But this has attracted our attention. Call $R$ the reference automaton (the one to minimize) and $C$
+the candidate automaton (the minimal automaton we are searching). As stated in the
+\cite{14} paper page \textbf{7}, the variables used for the SAT encoding can be grouped in three categories:
+
+\begin{itemize}
+ \item basic transitions (of $C$)
+ \item accepting transitions that encodes the membership of these transitions to an acceptance set
+       (of $C$)
+ \item paths variable that encodes a path between one state to another in the product automaton
+       ($C \otimes R$)
+\end{itemize}
+
+We realized that we were saving (using maps) some datas that could be retrieved dynamically when needed. The
+optimizations made relies on two facts:
+\begin{itemize}
+ \item almost everything about the candidate automaton is known. Therefore we tried to save only the
+       necessary informations,
+ \item the litterals are continuous (just increased by one at each time).
+\end{itemize}
+
+\noindent This leads us to implement a class that will handle the variables. At the beginning, an object of
+this class is instantiated with some values about the candidate automaton given. This class provides the
+necessary functions to retrieve any litteral corresponding to a tuple. Here is an approximate UML
+representation.\\
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}
+    \begin{umlpackage}{Pseudo UML}
+     \umlclass[name=vars\_helper]{spot::vars\_helper}
+     {
+       size\_conditions\_ : int \\
+       size\_states\_ : int \\
+       state\_based\_ : bool \\
+       ...
+       }{
+       
+       init(...) : void \\
+       get\_transitions(src, cond, dst) : int \\
+       get\_acctransitions(src, cond, dst, nacc) \\
+       ...
+     }
+    \end{umlpackage}
+  \end{tikzpicture}
+  \caption{Vars\_helper class UML representation}
+  \label{fig:sat_uml}
+\end{figure}
+
+Massif \cite{24}, a heap memory profiler was used with the aim of better evaluating the memory
+consumption. For some display reasons, the results are showed in the \ref{memory_profiling}
+section of the appendix. Note that as PicoSAT library consume also data, the current version is compared
+with the old one in the same conditions: by using \textbf{Glucose} as external SAT solver.
+
+For the formula $G(F(!a) | (F(b) U c))$, we now consume 23 Mb instead of 29,9 Mb. Have in mind that
+this formula start the minimization with an automaton of 8 states and the more bigger the automaton is, the
+more memory-hungry SAT-based minimization is.
+
+\section{Binary search}
+As said before, the binary search (algorithm \ref{dicho}) implemented before has never been benchmarked.
+After the memory-usage improvements, it was logical to restart a final benchmark with all the different
+algorithms we have:
+\begin{itemize}
+ \item old default and naive one (algorithm \ref{naive}),
+ \item binary search (algorithm \ref{dicho}),
+ \item naive incremental (algorithm \ref{incr1}),
+ \item not totally incremental (algorithm \ref{incr2}),
+ \item assumption (algorithm \ref{assume})
+\end{itemize}
+
+\noindent As a very big surprise, binary search won by litteraly knocking out the others! Again, for display
+reasons, it is not possible to display all the results. But this benchmark exists and can be
+reproduced, have a look on \textbf{bench/dtgbasat} folder of Spot project:
+\url{https://gitlab.lrde.epita.fr/spot/spot/tree/master/bench/dtgbasat}. There is a \textbf{README} file
+explaining how to do so.\\
+
+But we can at least show a summary of the final benchmark:
+
+\begin{figure}[H]
+ \centering
+ \input{tex/bench/all_resume.tex}
+ \caption{Summary of the final benchmark}
+ \label{fig:final_bench_resume}
+\end{figure}
+
+\section{Language map}
+\textbf{language\_map} is a new algorithm that takes in input an $\omega$-automaton and outputs a vector of 
+integer that has exactly the same size as the automaton. The number of different values (ignoring
+occurences) in the vector is the total number of recognized languages. States recognizing the same
+language have the same value.\\
+
+To vizualize language\_map output, highlight\_languages method has also been implemented. It takes in input
+an $\omega$-automaton and the associated language\_map output and colorize the states.\\
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.4]{img/highlight_language.png}
+ \caption{An $\omega$-automaton colorized using \textbf{--hightlight-language} new option of
+          \textbf{autfilt}}
+ \label{fig:highlight_language}
+\end{figure}
+
+To come back to SAT-based minimization, by default, the binary search algorithm starts with 1 as
+\textbf{min} value. Our theory is that the minimal automaton can not have less states than the total number
+of languages recognized by each states. Instead of using 1 for \textbf{min} value, we set it to the total
+number of recognized languages. This worked, it improved in general binary search algorithm but in somes
+cases, which are far from negligible, the default binary search method was still better. This leads to a
+new command line option: \textbf{sat-langmap}. This option is not set by default.
