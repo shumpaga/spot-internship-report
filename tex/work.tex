@@ -111,7 +111,7 @@ disk operations are slow. For instance, with this command
 line:
 \begin{lstlisting}[language=bash,caption={bash command-line to test a formula minimization using ltl2tgba}]
   time ltl2tgba -D -x sat-minimize 'G(a -> Fb) & G(c -> Fd)'
-                        --stats='states=%s, det=%d’
+                        --stats='states=%s, det=%d'
 \end{lstlisting}
 This result is obtained on a Macbook pro with \textbf{2,9GHz intel core i5} and
 \textbf{8 Go 1867 Mhz DDR3}:\\\\
@@ -461,7 +461,7 @@ representation.\\
     \end{umlpackage}
   \end{tikzpicture}
   \caption{Vars\_helper class UML representation}
-  \label{fig:sat_uml}
+  \label{fig:vars_helper_uml}
 \end{figure}
 
 Massif \cite{24}, a heap memory profiler was used with the aim of better evaluating the memory
@@ -501,10 +501,10 @@ But we can at least show a summary of the final benchmark:
 \end{figure}
 
 \section{Language map}
-\textbf{language\_map} is a new algorithm that takes in input an $\omega$-automaton and outputs a vector of 
-integer that has exactly the same size as the automaton. The number of different values (ignoring
-occurences) in the vector is the total number of recognized languages. States recognizing the same
-language have the same value.\\
+\textbf{language\_map} is a new algorithm that identifies states that recognize the same language. 
+It takes in input an $\omega$-automaton and outputs a vector of integer that has exactly the same
+size as the automaton. The number of different values (ignoring occurences) in the vector is the
+total number of recognized languages. States recognizing the same language have the same value.\\
 
 To vizualize language\_map output, highlight\_languages method has also been implemented. It takes in input
 an $\omega$-automaton and the associated language\_map output and colorize the states.\\
