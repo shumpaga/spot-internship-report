@@ -1,6 +1,3 @@
-\chapter{Company documentation}
-\chapter{Hardware / Software Documentation}
-
 \begin{landscape}
 \chapter{Gross results}
 
@@ -15,17 +12,29 @@ Any benchmark added in this section follows the same chart legend:\\
        time.
 \end{itemize}
 
-\subsection{External Glucose vs first incremental approach}
+\subsection{First incremental approach}
 \label{glu_vs_incr1_complete}
 The following table shows the results of the benchmark that compared the old default SAT-based minimization
 (using Glucose) to the first incremental approach (using PicoSAT library):\\
 \input{./tex/bench/glu_vs_incr1.tex}%			 First table
 
-\subsection{External Glucose vs a not total incremental approach}
+\subsection{Not total incremental approach}
 \label{glu_vs_incr2_complete}
 The following table shows the results of the benchmark that compared the old default SAT-based minimization
 (using Glucose) to the second incremental approach (using PicoSAT library):\\
 \input{./tex/bench/glu_vs_incr2.tex}%			 Second table
+
+\subsection{Assumption approach}
+\label{glu_vs_assume_complete}
+The following table shows the results of the benchmark that compared the old default SAT-based minimization
+(using Glucose) to the assumption approach (using PicoSAT library):\\
+\input{./tex/bench/glu_vs_assume.tex}%			 Third table
+
+\subsection{Binary Search}
+\label{glu_vs_dicho_complete}
+The following table shows the results of the benchmark that compared the old default SAT-based minimization
+(using Glucose) to old binary search (using PicoSAT library):\\
+\input{./tex/bench/glu_vs_dicho.tex}%			 Last table
 
 \section{Heap memory profiling}
 \label{memory_profiling}

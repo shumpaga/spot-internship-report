@@ -1,9 +1,11 @@
 \chapter{Basic concepts}
+\label{basic_concepts}
 Spot essentially manipulates $\omega$-automata which is a variation of finite-state automata (FSA) that runs
 on infinite, rather than finite. It is important to have a good understanding of automata theory,
-not only to understand this report but because automata crop up preety much everywhere in computer
-science. In logic design, natural language processing, system analysis, regular expressions, etc. The next
-two sections introduce the basics of automata theory and some concepts used in Spot.
+not only for this report but because automata crop up preety much everywhere in computer
+science. In logic design, natural language processing, system analysis, regular expressions, etc. This
+chapter discuss about the basics of automata theory, some concepts used in Spot and the satisfiability
+problem.
 
 \section{Automata theory}
 \textit{Automata theory} \cite{9} is the study of abstract machines and automata, as well as the
@@ -77,14 +79,18 @@ Well, an automaton run can be described as follows:
 \subsection{Determinism (DFA, NFA)}
 A \textit{deterministic} FSA is a final state machine where for each pair of state and input (symbols)
 there is one and only one transition to a next state. The figure \ref{aut:pres} introduced before is
-actually a \textit{deterministic} FSA or \textit{deterministic} finite-state automaton (DFA).\\
+actually a \textit{deterministic} finite-state automaton (DFA).\\
 
-\noindent A \textit{non deterministic} FSA or \textit{Nondeterministic} finite-state automaton (NFA) allows:
+\noindent A \textit{non deterministic} finite-state automaton (NFA) allows:
 \begin{itemize}
  \item many transitions labeled by the same symbol and outgoing from the same state,
  \item transitions labeled by the \textit{empty word} $\varepsilon$,
  \item transitions labeled by more than one symbol.
 \end{itemize}
+
+\subsection{Completeness}
+An automaton is said to be complete iff for each pair of state and input, there is at least one transition
+to a next state.
 
 \subsection{Finite-state automata (FSA) Definition}
 More formally, a finite-state automaton is defined by a quintuplet $M=(Q, \Sigma, X, s, F)$ where:
@@ -151,6 +157,29 @@ expressive power.
  \label{fig:omega_aut}
 \end{figure}
 
+\subsection{Transition-based vs. State-based acceptance}
+The figure \ref{fig:omega_aut} has state-based acceptance set, runs are accepting if these visit infinitely
+often some state in each acceptance set, etc. Transition-based acceptance means acceptance sets are now
+sets of transitions and runs are accepting if the transitions they visit satisfy the acceptance condition.\\
+
+Using transition based acceptance allows fore more compact automata. Here is two representations of the
+formula $GFa$ (infinitely often a):
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.8]{img/state_based.png}
+ \caption{State based automaton representing formula \textbf{GFa}}
+ \label{fig:state_based}
+\end{figure}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[scale=0.8]{img/trans_based.png}
+ \caption{Transition based automaton representing formula \textbf{GFa}}
+ \label{fig:transition_based}
+\end{figure}
+
+
 \subsection{Acceptance condition}
 An acceptance condition actually consists of two pieces: some acceptance sets, and a formula that tells
 how to use these acceptance sets.\\
@@ -187,4 +216,14 @@ The purpose of SAT solving is to assign each variables of a propositional formul
 formula evaluates to true. It is the canonical NP-complete problem. SAT solvers are used to solve many
 practical problems and this is also the case in Spot, they are used to minimize $\omega$-automata.\\
 
-For more details, \textbf{SAT-solving in practice} \cite{16} is a good introduction to SAT solvers.
+For instance, let's consider a boolean expression in 3 variables and 2 clauses:
+\begin{itemize}
+ \item[] ($x_1$ OR (NOT $x_3$)) (1)
+ \item[] $AND$
+ \item[] ($x_2$ OR $x_3$ OR (NOT $x_1$)) (2)
+\end{itemize}
+
+A solution to this expression can be: $x_1$, $x_2$ and NOT $x_3$. Note that there is 5 solutions.\\
+
+\noindent SAT problems are encoded in a file following DIMACS format \cite{18}. For more details,
+\textbf{SAT-solving in practice} \cite{16} is a good introduction to SAT solvers.

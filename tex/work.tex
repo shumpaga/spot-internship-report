@@ -220,7 +220,13 @@ did not help him to solve quickly the next similar problems?\\
 An hypothesis raised is that may be the fact that the size of the problem is never decreased affect it? By
 restarting the encoding from scratch at each step, the Old SAT-based minimization also restarts with a
 smaller automaton. The smaller the input automaton is, the smaller the SAT problem produced is (with a
-decreasing number of litterals and clauses).
+decreasing number of litterals and clauses).\\
+
+As SAT competitions also compares SAT solvers in incremental mode, they have defined a file format,
+called XCNF. As our incremental scenarios seem to offer challenges to SAT solver, we decided to provide
+a way to generate XCNF file corresponding to complete cycles of this first incremental minimization. We thus
+hope that SAT solvers contributors will think about how to improve their solver to be efficient in
+these incremental SAT solving scenarios.
 
 \section{A not total incremental approach}
 \label{approach2}
@@ -408,7 +414,10 @@ If such automaton is found, the process will restart, otherwise it loops over ea
 solver is it the one that mislead you? Or is it that one? For reasons still unknown, PicoSAT was not able
 to identify the assumption that failed. If you are interested, this implementation still exists in the
 \textbf{aga/assumesat1} branch of the Spot project
-\url{https://gitlab.lrde.epita.fr/spot/spot/tree/aga/assumesat1}.
+\url{https://gitlab.lrde.epita.fr/spot/spot/tree/aga/assumesat1}.\\
+
+\noindent The section \ref{glu_vs_assume_complete} in the appendix compares this assumption approach to
+the old SAT-based minimization.
 
 \section{Memory optimization}
 During the internship, benchmarks were firstly run on a cluster with Xeon E5-2620 2.00GHz cpu, 12
@@ -478,7 +487,7 @@ As said before, the binary search (algorithm \ref{dicho}) implemented before has
 After the memory-usage improvements, it was logical to restart a final benchmark with all the different
 algorithms we have:
 \begin{itemize}
- \item old default and naive one (algorithm \ref{naive}),
+ \item old default (external Glucose) (algorithm \ref{naive}),
  \item binary search (algorithm \ref{dicho}),
  \item naive incremental (algorithm \ref{incr1}),
  \item not totally incremental (algorithm \ref{incr2}),
@@ -491,14 +500,17 @@ reproduced, have a look on \textbf{bench/dtgbasat} folder of Spot project:
 \url{https://gitlab.lrde.epita.fr/spot/spot/tree/master/bench/dtgbasat}. There is a \textbf{README} file
 explaining how to do so.\\
 
-But we can at least show a summary of the final benchmark:
-
+However, this is a summary of the final benchmark:
 \begin{figure}[H]
  \centering
  \input{tex/bench/all_resume.tex}
  \caption{Summary of the final benchmark}
  \label{fig:final_bench_resume}
 \end{figure}
+
+\noindent The section \ref{glu_vs_dicho_complete} in the appendix shows an excerpt of this benchmark and
+compares this method to the Old default SAT-based minimization. In conclusion, binary search was selected
+as the default SAT-based minimization algorithm.
 
 \section{Language map}
 \textbf{language\_map} is a new algorithm that identifies states that recognize the same language. 
