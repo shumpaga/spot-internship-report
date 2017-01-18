@@ -18,7 +18,7 @@ The following table shows the results of the benchmark that compared the old def
 (using Glucose) to the first incremental approach (using PicoSAT library):\\
 \input{./tex/bench/glu_vs_incr1.tex}%			 First table
 
-\subsection{Not total incremental approach}
+\subsection{Not fully incremental approach}
 \label{glu_vs_incr2_complete}
 The following table shows the results of the benchmark that compared the old default SAT-based minimization
 (using Glucose) to the second incremental approach (using PicoSAT library):\\
@@ -60,7 +60,7 @@ more memory-hungry SAT-based minimization is.
 \begin{figure}[H]
  \centering
  \includegraphics[scale=0.6]{img/memory_now.png}
- \caption{Memory heap consumption before optimizations}
+ \caption{Memory heap consumption after optimizations}
  \label{fig:memory_now}
 \end{figure}
 

@@ -14,11 +14,11 @@ As a quick reminder, here are the required characteristics for the SAT solver:
  \item effectiveness.
 \end{itemize}
 
-\noindent The project \textbf{fastSAT}\cite{5} was born to help choose the SAT solver to distribute with
+\noindent The project \textbf{fastSAT}~\cite{5} was born to help choose the SAT solver to distribute with
 Spot. Until now, SAT-based minimization was performed through an external SAT solver. The default one
-was Glucose \cite{12} (3.0 version). Therefore, it seems logical to consider Glucose as a possible
-candidate. \textbf{fastSAT}\cite{5} compared Glucose 4.0 \cite{12} to CryptoMiniSat 5.0.1\cite{20} and
-PicoSAT 965 \cite{21}. Note that some SAT solvers provide two versions, one parallal and one simple
+was Glucose~\cite{12} (3.0 version). Therefore, it seems logical to consider Glucose as a possible
+candidate. \textbf{fastSAT}~\cite{5} compared Glucose 4.0~\cite{12} to CryptoMiniSat 5.0.1~\cite{20} and
+PicoSAT 965~\cite{21}. Note that some SAT solvers provide two versions, one parallal and one simple
 essentially because of the SAT competitions. In short, were compared:
 \begin{itemize}
  \item Glucose syrup (parallal) 4.0
@@ -32,7 +32,7 @@ The next three figures (\ref{fig:satchoose_1}, \ref{fig:satchoose_2} and \ref{fi
 comparaisons for three formulas. About twenty formulas have been tested in two modes: by forcing the number
 of state and by doing the complete cycles of minimization. It has been executed on a computer with an
 \textbf{Intel(R) Core(TM) i7-4710HQ CPU @ 2.50GHz} processor and  a \textbf{8 GiB} system memory.
-The measuring tool used is the open Google Benchmark tool \cite{22}.
+The measuring tool used is the open Google Benchmark tool~\cite{22}.
 
 \begin{figure}[H]
  \centering
@@ -59,12 +59,12 @@ The measuring tool used is the open Google Benchmark tool \cite{22}.
 performances. It consists of two source code files: \textbf{picosat.h} and \textbf{picosat.c} and was
 easily integrated and harmonised with Spot.
 
-\textbf{fastSAT}\cite{5} project is fully availlable and anyone can reproduce the benchmarks. Feel free to
+\textbf{fastSAT}~\cite{5} project is fully availlable and anyone can reproduce the benchmarks. Feel free to
 have a look.
 
 \section{New Satsolver class}
 There was already a satsolver class that is instantiated at the beginning of the SAT-based minimization
-procedures, formerly used to initialize a temporary \textbf{cnf file} (DIMACS \cite{18}), return
+procedures, formerly used to initialize a temporary \textbf{cnf file} (DIMACS~\cite{18}), return
 it and call the external SAT solver. The file writing was directly made by those procedures.
 
 \noindent The objective is to completely abstract the file writing. SAT-based minimization procedures will
@@ -194,7 +194,7 @@ are skipped.
 \end{figure}
 
 The next two figures (\ref{fig:glu_vs_incr1_dba} and \ref{fig:glu_vs_incr1_dtgba}) shows two graphs generated
-with ggplot2 \cite{23} (a graphing package implemented in top of the \textbf{R} statistical package). Any
+with ggplot2~\cite{23} (a graphing package implemented in top of the \textbf{R} statistical language). Any
 point between the two lines passing through the origin is in the tolerance area (more or less 5\%). All the
 bothering points (cases where glucose win) are located in the area over both lines. Obvisouly, the
 first incremental approach wins when points are located under both lines.
@@ -228,7 +228,7 @@ a way to generate XCNF file corresponding to complete cycles of this first incre
 hope that SAT solvers contributors will think about how to improve their solver to be efficient in
 these incremental SAT solving scenarios.
 
-\section{A not total incremental approach}
+\section{A not fully incremental approach}
 \label{approach2}
 With a view to verify the last hypothesis, a similar approach has been proposed.
 The idea is to provide the opportunity to choose how many times SAT-based
@@ -249,7 +249,7 @@ Here is how the algorithm looks like ($s$ means sat\_incr\_steps and stands for 
    \State{$n \gets R.nb\_states() $}
    \State{$C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $}
    \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
-   \For{$i = 0$; $i < s;$ ++$i$}
+   \For{$i \in \{0, 1, ..., s-1\}$}
     \State{add clauses to exclude one more state}
     \State{$C \gets$ Try to solve the new problem and build the new automaton}
     \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
@@ -311,13 +311,13 @@ section.
 
 \section{Assumptions approach}
 In incremental SAT solving, assumptions are propositions that, once assumed, hold only for the next
-invocation of the solver. After that, all the assumption expect to be assumed again. The SAT solver, when
+invocation of the solver. After that, all the assumptions expect to be assumed again. The SAT solver, when
 asked for a solution, consider all the basic clauses and the assumed assumptions. That is interesting
 because it makes possible to keep the basic rules and mix them with different hypothesis at each call.\\
 
 In our case, the basic rules are obvisouly the traditional encoding and the hypothesis are the removal
 of states. For a better understanding let us consider the following figure (\ref{fig:cnf_assume}). The
-first area represent the traidtional encoding. After that, some new variables are introduced
+first area represent the traditional encoding. After that, some new variables are introduced
 ($x_1$, $x_2$, $x_3$, ...), so that each of them represent an assumption that can be assumed.
 All the assumptions add some clauses to forbid the entrant transitions of one state and implies the
 previous assumption except the first one ($x_1$) that does not have any assumption previously declared.\\
@@ -392,7 +392,7 @@ how the algorithm works:\\
    \State{$C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $}
    \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
    \State{Add $s$ assumptions}
-   \State{Assume the last assumptions //which assumes every assumptions}
+   \State{Assume the last assumption //which assumes every assumptions}
    \State{$C \gets$ Try to solve the new problem and build the new automaton}
    \If{$C$ \textbf{does not exists}}
     \State{\Return{binary\_search(R, $R.size()-1$ as \textbf{max}, 1 as \textbf{min})}}
@@ -426,8 +426,8 @@ swapping. We were forced to move to a cluster with Intel(R) Xeon(R) CPU E7- 2860
 cores and 512 GO DDR3 to continue the experiments.\\
 
 But this has attracted our attention. Call $R$ the reference automaton (the one to minimize) and $C$
-the candidate automaton (the minimal automaton we are searching). As stated in the
-\cite{14} paper page \textbf{7}, the variables used for the SAT encoding can be grouped in three categories:
+the candidate automaton (the minimal automaton we are searching). As stated in the \cite{14} paper page
+\textbf{7}, the variables used for the SAT encoding can be grouped in three categories:
 
 \begin{itemize}
  \item basic transitions (of $C$)
@@ -473,12 +473,12 @@ representation.\\
   \label{fig:vars_helper_uml}
 \end{figure}
 
-Massif \cite{24}, a heap memory profiler was used with the aim of better evaluating the memory
+Massif~\cite{24}, a heap memory profiler was used with the aim of better evaluating the memory
 consumption. For some display reasons, the results are showed in the \ref{memory_profiling}
 section of the appendix. Note that as PicoSAT library consume also data, the current version is compared
 with the old one in the same conditions: by using \textbf{Glucose} as external SAT solver.
 
-For the formula $G(F(!a) | (F(b) U c))$, we now consume 23 Mb instead of 29,9 Mb. Have in mind that
+For the formula $G(F(!a) \lor (F(b) U c))$, we now consume 23 Mb instead of 29,9 Mb. Have in mind that
 this formula start the minimization with an automaton of 8 states and the more bigger the automaton is, the
 more memory-hungry SAT-based minimization is.
 
@@ -490,7 +490,7 @@ algorithms we have:
  \item old default (external Glucose) (algorithm \ref{naive}),
  \item binary search (algorithm \ref{dicho}),
  \item naive incremental (algorithm \ref{incr1}),
- \item not totally incremental (algorithm \ref{incr2}),
+ \item not fully incremental (algorithm \ref{incr2}),
  \item assumption (algorithm \ref{assume})
 \end{itemize}
 
@@ -517,14 +517,33 @@ as the default SAT-based minimization algorithm.
 It takes in input an $\omega$-automaton and outputs a vector of integer that has exactly the same
 size as the automaton. The number of different values (ignoring occurences) in the vector is the
 total number of recognized languages. States recognizing the same language have the same value.\\
+\newcommand{\stcomp}[1]{\overline{#1}}
+\begin{algorithm}[h]
+ \caption{}
+ \label{langmap}
+ \begin{algorithmic}[1]
+  \Procedure{language\_map$(R)$}{}
+   \State{$n \gets R.nb\_states()$}
+   \For{$i \in \{1, 2, ..., n-1\}$}
+    \For{$j \in \{0, 1, ..., i-1\}$}
+     \If{$R_i \cap \stcomp{R_j} \neq \emptyset \land \stcomp{R_i} \cap R_j \neq \emptyset$}
+      \State{$R_i$ and $R_j$ recognize the same language}
+     \EndIf
+    \EndFor
+   \EndFor
+  \EndProcedure
+ \end{algorithmic}
+\end{algorithm}
+\noindent The algorithm \ref{langmap} shows how it works. Note that $R_x$ represents the same automaton as $R$ but
+with the initial state set to state $x$ and $\stcomp{R}$ is the complement of $R$.\\
 
 To vizualize language\_map output, highlight\_languages method has also been implemented. It takes in input
 an $\omega$-automaton and the associated language\_map output and colorize the states.\\
 
-\begin{figure}[H]
+\begin{figure}[h]
  \centering
- \includegraphics[scale=0.4]{img/highlight_language.png}
- \caption{An $\omega$-automaton colorized using \textbf{--hightlight-language} new option of
+ \includegraphics[scale=0.6]{img/highlight_language.png}
+ \caption{An $\omega$-automaton colorized using \textbf{-{}-hightlight-language} new option of
           \textbf{autfilt}}
  \label{fig:highlight_language}
 \end{figure}

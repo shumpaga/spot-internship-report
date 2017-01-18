@@ -1,124 +1,42 @@
 \chapter{Basic concepts}
 \label{basic_concepts}
 Spot essentially manipulates $\omega$-automata which is a variation of finite-state automata (FSA) that runs
-on infinite, rather than finite. It is important to have a good understanding of automata theory,
-not only for this report but because automata crop up preety much everywhere in computer
-science. In logic design, natural language processing, system analysis, regular expressions, etc. This
-chapter discuss about the basics of automata theory, some concepts used in Spot and the satisfiability
-problem.
+on infinite, rather than finite. Automata theory crop up preety much everywhere in computer science.
+In logic design, natural language processing, system analysis, regular expressions, etc. This
+chapter discuss about some basics of automata theory related to $\omega$-automaton and then, the 
+satisfiability problem.
 
 \section{Automata theory}
-\textit{Automata theory} \cite{9} is the study of abstract machines and automata, as well as the
+This section consists essentially of excerpts of Spot's \textbf{concept}~\cite{8} and
+wikipedia $\omega$-automaton web pages. Feel free to have a look on these pages for further details.\\
+
+\noindent \textit{Automata theory}~\cite{9} is the study of abstract machines and automata, as well as the
 computational problems that can be solved using them.
 
 \begin{figure}[H]
  \centering
  \includegraphics[scale=0.2]{img/automata_classes.png}
- \caption{Classes of automata \cite{9}}
+ \caption{Classes of finite automata~\cite{9}}
  \label{fig:aut_classes}
 \end{figure}
-There are different classes of automata. The finite state machine has less computational power than
-some other models of computation such as the Turing machine \cite{10}. The computational power distinction
+There are different classes of finate automata. The finite state machine has less computational power than
+some other models of computation such as the Turing machine~\cite{10}. The computational power distinction
 means there are computational tasks that a Turing machine can do but a finite-state automaton (FSA) can
 not.\\
 
-\noindent From now on, the acronym FSA will be used instead of final-state automat\{a, on\}.\\
-
-Only FSA will be concisely described in this section as (again) $\omega$-automata used in Spot are a
-variation of FSA.
-
-\subsection{Automata}
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[shorten >=1pt,node distance=4cm,on grid,auto] 
-    \node[state,initial] (q_0)   {$q_0$};
-    \node[state, accepting] (q_1) [right=of q_0] {$q_1$};
-    \path[->] 
-    (q_0) edge[bend right=-30] node {$b$} (q_1)
-          edge[loop above]     node {$a$} ()
-    (q_1) edge[bend left=30]   node {$a$} (q_0)
-          edge[loop above]     node {$b$} ();
-  \end{tikzpicture}
-  \caption{A finite-state automaton represented using a graph}
-   \label{aut:pres}
-\end{figure}
-
-The figure (\ref{aut:pres}) shows how an automaton looks like. It consists of:
-\begin{itemize}
- \item a set of states (represented in the figure by circles). Among them we can distinguish the 
-       \textit{initial state} \textbf{q0} (the one pointed by \textbf{start}) and an
-       \textit{accepting state} \textbf{q1} (the one doubly encircled).
- \item a transition relation (represented in the figure by arrows). This relation indicates for each
-       state which state could be next according to the next symbol to read.
-\end{itemize}
-
-Before giving a regular definition, some points need clarification.
-
-\subsection{Alphabet, word, language}
-An alphabet is a finite set of symbols. It is commonly denoted by $\Sigma$. Edges of automata are labeled
-by those symbols. The alphabet used by the automaton of figure \ref{aut:pres} is $\{a, b\}$. \\
-
-\noindent A word is a finite sequence of symbols. $a$, $b$, $ab$, $aaaa$, $abbba$, $ababababbbaaabbaba$ are
-some words defined on the alphabet $\{a, b\}$. Automata recognizes words. In Spot, $\omega$-automata
-recognizes \textit{$\omega$-words}, which are infinite rather than finite.\\
-
-\noindent A language is a set of words defined on the same alphabet. The automata of figure \ref{aut:pres}
-accepts or recognizes the set of words ending with $b$. \textbf{q1} is the only one accepting state and
-the only way to come in \textbf{q1} is to read b.
-
-\subsection{Automaton run}
-Well, an automaton run can be described as follows:
-\begin{itemize}
- \item it starts in the initial state and waits for the first character (of the word) to read.
- \item At each step, it reads the next symbol (character) and determine the next state using the
-       transition relation.
- \item It stops when all the character chain has been read. The word is accepted if the automaton is
-       in one of the accepting states.
-\end{itemize}
-
-\subsection{Determinism (DFA, NFA)}
-A \textit{deterministic} FSA is a final state machine where for each pair of state and input (symbols)
-there is one and only one transition to a next state. The figure \ref{aut:pres} introduced before is
-actually a \textit{deterministic} finite-state automaton (DFA).\\
-
-\noindent A \textit{non deterministic} finite-state automaton (NFA) allows:
-\begin{itemize}
- \item many transitions labeled by the same symbol and outgoing from the same state,
- \item transitions labeled by the \textit{empty word} $\varepsilon$,
- \item transitions labeled by more than one symbol.
-\end{itemize}
-
-\subsection{Completeness}
-An automaton is said to be complete iff for each pair of state and input, there is at least one transition
-to a next state.
-
-\subsection{Finite-state automata (FSA) Definition}
-More formally, a finite-state automaton is defined by a quintuplet $M=(Q, \Sigma, X, s, F)$ where:
-\begin{itemize}
- \item $Q$ is a set of states,
- \item $\Sigma$ is an alphabet,
- \item $X$ can be either a transition function $\delta : Q \times \Sigma \rightarrow Q$ (if the automaton is
-       deterministic) or a transition relation $\Delta \subset (Q \times \Sigma^* \times Q)$ (if it is not
-       deterministic),
- \item $s \in Q$ is the initial state,
- \item $F \subseteq Q$ is a set of accepting states.
-\end{itemize}
-
-\section{About Spot}
-This section consists essentially of Spot's \textbf{concept} web page excerpts\cite{8}. Feel free to have a
-look on that web page for further details.
+\noindent However, the $\omega$-automata would be a simillar but parallal hierarchy.
 
 \subsection{Atomic preposition}
 An \textit{atomic proposition} is a named Boolean variable that represents a simple property that must be
 true or false. It usually represents some property of a system. They are used to construct temporal logic
-formulas\cite{13} to specify properties of the system.
+formulas~\cite{13} to specify properties of the system.
 
 \subsection{Boolean formula}
 A Boolean formula is formed from \textit{atomic preposition}, the Boolean constants true and false, and
 standard Boolean operators like and, or, implies, xor, etc.
 
 \subsection{$\omega$-words}
-An $\omega$-word as said before is a word of infinite length. In our context, each letter is used to
+An $\omega$-word is a word of infinite length. In our context, each letter is used to
 describe the state of a system at a given time, and the sequence of letters shows the evolution of the
 system as the (discrete) time is incremented.\\
 
@@ -131,18 +49,21 @@ $\{a,b\}$;$\{a\}$;… is an example of $\omega$-word over \textbf{AP}. This part
 interpreted as the following scenario: atomic proposition $a$ is always true, $b$ is true at each other
 instant, and $c$ is always false.
 
-\subsection{$\omega$-automaton}
+\subsection{$\omega$-Automaton}
 An $\omega$-automaton is used to represent sets of $\omega$-word.\\
 
-Those look like the classical NFA in the sense that they also have states and transitions. However
-$\omega$-automata recognize $\omega$-words instead of finite words. In this context, the notion of final
-state makes no sense, and is replaced by the notion of acceptance condition: a run of the automaton
-(i.e., an infinite sequence alternating states and edges in a way that is compatible with the structure of
-the automaton) is accepting if it satisfies the constraint given by the acceptance condition.\\
-
-In Spot, $\omega$-automata have their edges labeled by Boolean formulas. An $\omega$-word is accepted by an
-$\omega$-automaton if there exists an accepting run whose labels (those Boolean formulas) are compatible
-with the minterms \cite{11} used as letters in the word.\\
+It is defined by a quintuplet $M=(AP, Q, q_o, X, \alpha)$ where:
+\begin{itemize}
+ \item $AP$ is a set of Atomic Proposition,
+ \item $Q$ is Q is a finite set. The element of $Q$ are called states of $M$,
+ \item $Q_0 \subset Q$ is the set of initial states. If the automaton is deterministic, there is only one
+       initial state $q_0 \in Q$. Determinism is a notion defined below.
+ \item $X$ can be either a transition function $\delta : Q \times 2^{AP} \rightarrow Q$ (if the automaton is
+       deterministic) or a transition relation $\Delta \subset (Q \times 2^{AP} \times Q)$ (if it is not
+       deterministic). 
+ \item And $\alpha$ is a positive Boolean function over terms of the form $Fin(T)$ or $Inf(T)$ with
+       $T \subseteq \Delta$. This is also called the \textit{acceptance condition}.
+\end{itemize}
 
 The language of an $\omega$-automaton is the set of $\omega$-words it accepts.\\
 
@@ -150,15 +71,39 @@ There are many kinds of $\omega$-automata and they mostly differ by their accept
 different types of acceptance condition, and whether the automata are deterministic or not can affect their
 expressive power.
 
-\begin{figure}[H]
- \centering
- \includegraphics[scale=0.8]{img/omega_aut.png}
- \caption{$\omega$-automaton representing formula \textbf{FGa}}
- \label{fig:omega_aut}
-\end{figure}
+\subsection{Determinism}
+An automaton is said to be \textit{deterministic} iff for each pair of state and symbol ($Q \times 2^{AP}$)
+there is one and only one transition to a next state.\\
+
+\noindent A \textit{non deterministic} automaton allows:
+\begin{itemize}
+ \item many transitions labeled by the same symbol and outgoing from the same state,
+ \item transitions labeled by the \textit{empty word} $\varepsilon$,
+ \item transitions labeled by more than one symbol.
+\end{itemize}
+
+\noindent Therefore, for each pair of state and symbol, there is no more one destination state but a set of
+possible destination states. Hence the $Q \times 2^{AP} \times Q$.
+
+\subsection{$\omega$-Automaton run}
+A run of $M$ on the input $(a_1, a_2, a_3,...)$ is any infinite sequence
+$\rho = (r_0, r_1, r_2,...)$ of states that satisfies the following conditions:
+\begin{itemize}
+ \item $r_0$ is an element of $Q_0$,
+ \item $r_1$ is an element of $\Delta(r_0, a_1)$,
+ \item $r_2$ is an element of $\Delta(r_0, a_2)$.\\...
+ \item $r_n$ is an element of $\Delta(r_{n-1}, a_n)$,
+\end{itemize}
+
+A nondeterministic $\omega$-automaton may admit many different runs on any given input, or none at all.
+The input is accepted if at least one of the possible runs is accepting. Whether a run is accepting depends
+only on $\alpha$, as for deterministic $\omega$-automata. Every deterministic $\omega$-automaton can be
+regarded as a nondeterministic $\omega$-automaton by taking $\Delta$ to be the graph of $\delta$.
+The definitions of runs and acceptance for deterministic $\omega$-automata are then special cases of the
+nondeterministic cases.
 
 \subsection{Transition-based vs. State-based acceptance}
-The figure \ref{fig:omega_aut} has state-based acceptance set, runs are accepting if these visit infinitely
+The figure~\ref{fig:omega_aut} has state-based acceptance set, runs are accepting if these visit infinitely
 often some state in each acceptance set, etc. Transition-based acceptance means acceptance sets are now
 sets of transitions and runs are accepting if the transitions they visit satisfy the acceptance condition.\\
 
@@ -179,7 +124,6 @@ formula $GFa$ (infinitely often a):
  \label{fig:transition_based}
 \end{figure}
 
-
 \subsection{Acceptance condition}
 An acceptance condition actually consists of two pieces: some acceptance sets, and a formula that tells
 how to use these acceptance sets.\\
@@ -198,16 +142,19 @@ parentheses for grouping. Note that there is no negation, but an acceptance cond
 swapping $t$ and $f$, $\land$ and $\lor$, and $Fin(n)$ and $Inf(n)$.\\
 
 The following table gives an overview of how some classical acceptance condition are encoded. The first
-column gives a name that is more human readable (those names are defined in the HOA \cite{3} format and
-are also recognized by Spot). The second column give the encoding as a formula. Everything here is
-case-sensitive.
+column gives a name that is more human readable (those names are defined in the HOA~\cite{3} format and
+are also recognized by Spot). The second column give the encoding as a formula.
 
 \begin{figure}[H]
  \centering
  \includegraphics[scale=0.6]{img/acc_conds.png}
- \caption{$\omega$-automata acceptance conditions \cite{8}}
+ \caption{$\omega$-automata acceptance conditions~\cite{8}}
  \label{fig:acc_conds}
 \end{figure}
+
+\subsection{Completeness}
+An automaton is said to be complete iff for each pair of state and input, there is at least one transition
+to a next state.
 
 \section{SAT solver}
 Satisfiability problem is a classic of computer science.\\
@@ -216,14 +163,33 @@ The purpose of SAT solving is to assign each variables of a propositional formul
 formula evaluates to true. It is the canonical NP-complete problem. SAT solvers are used to solve many
 practical problems and this is also the case in Spot, they are used to minimize $\omega$-automata.\\
 
-For instance, let's consider a boolean expression in 3 variables and 2 clauses:
+\subsection{Disjunctive Normal Form (DNF)}
+A logical formula is said to be in disjunctive normal form if it is a disjunction of conjunctive clauses.
+It can also be described as an OR of ANDS. Note that the \textbf{not} operator $\neg$ is authorized and can
+only be used as part of a litteral. For instance, the
+following formulas are in DNF:
 \begin{itemize}
- \item[] ($x_1$ OR (NOT $x_3$)) (1)
- \item[] $AND$
- \item[] ($x_2$ OR $x_3$ OR (NOT $x_1$)) (2)
+ \item $(A \land B \land C) \lor (\neg A \land B \land \neg C) \lor (A \land \neg B \land C)$
+ \item $A \lor (B \land C)$
+ \item $A \lor B \lor \neg C$
 \end{itemize}
+To solve such a formula, as it is a disjuction of cunjunctive clauses, it can be considered as an
+enumeration of possible solutions. Each conjunctive clause is a solution sufficient to evaluate all the DNF
+to true.
 
-A solution to this expression can be: $x_1$, $x_2$ and NOT $x_3$. Note that there is 5 solutions.\\
+\subsection{Conjunctive Normal Forms (CNF)}
+Similarly, a conjunctive normal form is a logical boolean formula that consists of conjunction of clauses
+--- clauses being a disjunction of litterals. it can also be described as an AND of ORS and the operator
+$\neg$ is also authorized, only attached to a litteral.
+\begin{itemize}
+ \item $\neg A \land (B \lor C)$
+ \item $(A \lor B \lor C) \land (D \lor \neg E) \land (F)$
+ \item $ (A \lor B) \land (\neg A \lor C) $
+\end{itemize}
+Solving such a formula is not as easy as DNF formulas. SAT solvers can solve these CNF formulas.
 
-\noindent SAT problems are encoded in a file following DIMACS format \cite{18}. For more details,
-\textbf{SAT-solving in practice} \cite{16} is a good introduction to SAT solvers.
+\subsection{DIMACS format}
+DIMACS is a file format used to define a boolean expression written in conjunctive normal form. This file
+can be used as input for SAT solvers --- SAT problems are encoded in a file following DIMACS
+format~\cite{18}. For more details, \textbf{SAT-solving in practice}~\cite{16} is a good introduction to
+SAT solvers.

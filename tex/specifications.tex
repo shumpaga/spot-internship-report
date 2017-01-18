@@ -1,5 +1,4 @@
 \chapter{Specifications}
-
 This chapter tries to shed light on what was before this internship and why all the achieved work was
 needed.
 
@@ -7,24 +6,30 @@ needed.
 The principal purpose of this internship is to improve an algorithm already implemented and used to
 minimize \textit{deterministic} $\omega$-automaton. The source code associated is the result of two papers:
 \begin{itemize}
- \item \textbf{SAT-based Minimization of Deterministic $\omega$-Automata}\cite{15} and
- \item \textbf{Mechanizing the Minimization of Deterministic Generalized Büchi Automata}\cite{14}.
+ \item \textbf{SAT-based Minimization of Deterministic $\omega$-Automata~\cite{15}} and
+ \item \textbf{Mechanizing the Minimization of Deterministic Generalized Büchi Automata~\cite{14}}.
 \end{itemize}
 
 Those two papers written by \textit{Souheib baarir} and \textit{Alexandre Duret-Lutz} are themselves a
-generalization of \textbf{Ehlers} SAT' based procedure \cite{17}. Note that the first paper\cite{15} is an
-extension of the second\cite{14} which is restricted to generalized-Büchi acceptance.
+generalization of \textbf{Ehlers}' SAT-based procedure~\cite{17}. Note that the first paper~\cite{15} is an
+extension of the second~\cite{14} which is restricted to generalized-Büchi acceptance.
 
 \subsection{The existing minimization}
-These previous work introduced a tool that can read any \textit{deterministic} $\omega$-automaton and
-synthetize (if it exists) an equivalent \textit{deterministic} $\omega$-automaton with a given number
-of states and arbitrary acceptance condition.\\
 
-\noindent This tool, called \textsc{Synthetize}DTGBA$(R,n,m)$ works this way, It:
+The existing minimization is based on this observation: since the reference automaton $R$ (the inputed one)
+is complete and deterministic and the candidate automaton $C$ (the mininal one to find) is also complete
+and deterministic, any word of $\Sigma^\omega$ has a unique run in $R$ and $C$. Verifying that both
+automaton recognizes the same language can be done by ensuring that each word is accepted by $R$ iff it is
+accepted by $C$. In practice, this is checked by ensuring that any cycle of the synchronous product
+$C \otimes R$ corresponds to cycles that are either accepting in $C$ and $R$, or rejecting in both.\\
+
+These previous work introduced a tool called \textsc{Synthetize}DTGBA$(R,n,m)$ that can read any
+\textit{deterministic} $\omega$-automaton and synthetize (if it exists) an equivalent \textit{deterministic}
+$\omega$-automaton with a given number of states and arbitrary acceptance condition. It works this way:
 \begin{itemize}
  \item[-] inputs a complete DTGBA $R$, two target numbers of state ($n$) and arbitrary acceptance condition
           ($m$),
- \item[-] produces a DIMACS file \cite{18} with all the above clauses,
+ \item[-] produces a DIMACS file~\cite{18} with all necessary clauses,
  \item[-] calls a SAT solver to solve this problem,
  \item[-] builds the resulting DTGBA $C$ if it exists.
 \end{itemize}
@@ -54,8 +59,8 @@ of states and arbitrary acceptance condition.\\
    \State $max\_states \gets R.nb\_states()-1$
    \State $min\_states \gets 1$
    \State $S \gets null$
-   \While{$min\_states <= max\_states$}
-    \State $target \gets (max\_states + min\_states) / 2$
+   \While{$min\_states \leq max\_states$}
+    \State $target \gets \lfloor(max\_states + min\_states) / 2\rfloor$
     \State $C \gets \textsc{Synthetize}DTGBA(R,target,m)$
     \If {$C$ \textbf{does not exists}}
      \State $min\_states \gets target + 1$
@@ -69,15 +74,15 @@ of states and arbitrary acceptance condition.\\
  \end{algorithmic}
 \end{algorithm}
 
-\noindent Until this internship, Algorithm \ref{naive} was used by default. There are no real reasons for
+\noindent Until this internship, Algorithm~\ref{naive} was used by default. There are no real reasons for
 that except that the second algorithm was implemented later in a completely different context and has never
 been benchmarked and compared to the first one.\\
 
 \noindent \textbf{$\omega$-Automata minimization} can be seen in two ways:
 \begin{itemize}
  \item \textbf{Reduction of the number of states:}
-       This is typically the algorithm \ref{naive} that keeps by default the same number of acceptance sets
-       ($m$) and decreases $n$ at each \textsc{Synthetize}DTGBA$(R,n,m)$ call. The algorithm \ref{dicho}
+       This is typically the algorithm~\ref{naive} that keeps by default the same number of acceptance sets
+       ($m$) and decreases $n$ at each \textsc{Synthetize}DTGBA$(R,n,m)$ call. The algorithm~\ref{dicho}
        has also the same perception. It knows the minimal automaton is between $1$ (obviously, a smaller
        one does not exists) and $n-1$ so instead of checking each number of states it performs a binary
        search with the will to be faster.
@@ -87,7 +92,7 @@ been benchmarked and compared to the first one.\\
        an attempt to reduce the number of states.
 \end{itemize}
 
-\noindent The figure below (\ref{fig:accsets}) is a great example from the first paper \cite{14} that shows how
+\noindent The figure below~\ref{fig:accsets} is a great example from the first paper~\cite{14} that shows how
 smaller an automaton can become if the acceptance sets number is increased. Note that $|\mathcal{F}|$ here
 is $m$ (the number of accepting sets).
 \begin{figure}[H]
@@ -101,8 +106,8 @@ Finding the smallest $m$ such that no smaller equivalent DTGBA with a larger $m$
 still an opened problem.
 
 \subsection{Tool chain}
-The figure \ref{fig:tool_chain} (from the FORTE'14 paper \cite{14}) gives an overview of the processing
-chains that can be used to turn an LTL formula \cite{13} into minimal DBA, DTBA or DTGBA.
+The figure~\ref{fig:tool_chain} (from the FORTE'14 paper~\cite{14}) gives an overview of the processing
+chains that can be used to turn an LTL formula~\cite{13} into minimal DBA, DTBA or DTGBA.
 The blue area at the top describes:
 \begin{lstlisting}[language=bash,caption={bash command-line to translate a formula using ltl2tgba}]
   ltl2tgba -D -x sat-minimize
@@ -115,7 +120,7 @@ The blue area at the top describes:
 
 \begin{figure}[H]
  \centering
- \includegraphics[scale=0.7]{img/tool_chain.png}
+ \input{img/satmin.tex}
  \caption{Two tool chain used to convert an LTL formula}
  \label{fig:tool_chain}
 \end{figure}
@@ -123,10 +128,10 @@ The blue area at the top describes:
 \noindent As the SAT-based minimization only takes DTBA or DTGBA, the input automaton undergoes some
 transformations. In each tool, a Weak-DBA minimization is attempted. If that succeed, a minimal weak DBA
 is outputed (looking for transition-based or generalized acceptance will not reduce it further). For
-further details, please read the FORTE'14 paper \cite{14}.
+further details, please read the FORTE'14 paper~\cite{14}.
 
 \subsection{The limits}
-Consider again the default algorithm (\ref{naive}).
+Consider again the default algorithm (~\ref{naive}).
 At each iteration, this algorithm re-encodes the research of a smaller automaton from scratch. Iterations
 after iterations (from $n$ to $n-1$, $n-1$ to $n-2$, etc.) the clauses encoded are almost the same.
 Therefore, it is a shame that nothing is retained, learned at each iteration. This is where incremental sat
@@ -140,14 +145,14 @@ SAT solving is to recycle the work done in solving a previous problem in the seq
 subsequent problems.\\
 
 In order to use an incremental approach with SAT solver, it is no more possible to use DIMACS file
-\cite{18}. Therefore, Spot needs to be linked to a SAT solving library. Let's remember that until now
+~\cite{18}. Therefore, Spot needs to be linked to a SAT solving library. Let's remember that until now
 Spot requires a SAT solver to be installed on the same machine and provides a way to set it (through
 SPOT\_SATSOLVER environment variable). obviously, being linked to a SAT solver and make calls to its
 functions will be more efficient than making Input/Output operations and executing another binary.\\
 
 The memory consumption is also another problem. The larger the automaton is, the more variables there are.
 With some automata, the memory usage could grow over 150 Go which is uncommon for most users. The figure
-\ref{fig:over_memory} helps to see memory usage peaks during a benchmark realized the end of September
+~\ref{fig:over_memory} helps to see memory usage peaks during a benchmark realized the end of September
 2016.\\
 
 \begin{figure}[h]

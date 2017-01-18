@@ -1,26 +1,43 @@
 \usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+% Arch.tex & satmin.tex
+\usetikzlibrary{arrows}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{shadows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{shapes}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes.callouts}
+\newcommand{\CF}{\ensuremath{\mathcal{F}}}
+\newcommand{\pin}[1]{\tikz[baseline=0]\node[fill=yellow,draw,circle,thin,inner sep=0.5pt,above left] {\footnotesize #1};}
+% Arch.tex & satmin.tex
+\usepackage{tikz-uml}
 \usepackage{epigraph}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{xcolor}
 \usepackage{listings}
-
-% Appendix benchmark tables
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{color}
 \usepackage{colortbl}
 \usepackage{longtable, tabu}
 \usepackage{pagecolor}
 \usepackage{afterpage}
 
+% Appendix benchmark tables
 \definecolor{Gray}{rgb}{0.7, 0.7, 0.7}
 \definecolor{Green}{rgb}{0.4, 1, 0.4}
 \definecolor{Red}{rgb}{0.8, 0, 0}
 \definecolor{Yelw}{rgb}{1, 0.98, 0.4}
 \definecolor{Purpl}{rgb}{1, 0.6, 1}
 % Appendix benchmark tables
+
+
 
 % Layout configurations
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
@@ -93,7 +110,7 @@
 \renewcommand\epigraphsize{\normalsize}
 \setlength\epigraphwidth{1\textwidth}
 \definecolor{titlepagecolor}{cmyk}{1,.60,0,.40}
-\DeclareFixedFont{\titlefont}{T1}{ppl}{b}{it}{0.5in}
+\DeclareFixedFont{\titlefont}{T1}{ppl}{b}{it}{0.4in}
 \makeatletter                       
 \def\printauthor{%                  
     {\large \@author}}              
@@ -103,9 +120,9 @@
     Alexandre GBAGUIDI AÏSSE \\
     Student in second year or computer engineering at \EPITA \\
     \texttt{gbagui\_a@epita.fr}\vspace{20pt} \\
-    Supervised by: \\
-    Alexandre Duret-Lutz \\
-    Assistant Professor at \LRDE (Research and Development Laboratory of \EPITA) \\
+    Supervised by:\\
+    Alexandre Duret-Lutz\\
+    Assistant Professor at \LRDE\space(Research and Development Laboratory of \EPITA) \\
     \texttt{adl@lrde.epita.fr}
     }
 
