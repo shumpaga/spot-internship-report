@@ -19,7 +19,7 @@ extension of the second~\cite{14} which is restricted to generalized-Büchi acce
 The existing minimization is based on this observation: since the reference automaton $R$ (the inputed one)
 is complete and deterministic and the candidate automaton $C$ (the mininal one to find) is also complete
 and deterministic, any word of $\Sigma^\omega$ has a unique run in $R$ and $C$. Verifying that both
-automaton recognizes the same language can be done by ensuring that each word is accepted by $R$ iff it is
+automaton recognizes the same language can be done by ensuring that each word is accepted by $R$ if and only if it is
 accepted by $C$. In practice, this is checked by ensuring that any cycle of the synchronous product
 $C \otimes R$ corresponds to cycles that are either accepting in $C$ and $R$, or rejecting in both.\\
 
@@ -44,7 +44,7 @@ $\omega$-automaton with a given number of states and arbitrary acceptance condit
    \BState \emph{repeat}:
    \State $n \gets R.nb\_states() $
    \State $C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $
-   \If {$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \If {$C$ \textbf{does not exist}} \Return $R$\EndIf
    \State $R \gets C$
   \EndProcedure
  \end{algorithmic}
@@ -62,7 +62,7 @@ $\omega$-automaton with a given number of states and arbitrary acceptance condit
    \While{$min\_states \leq max\_states$}
     \State $target \gets \lfloor(max\_states + min\_states) / 2\rfloor$
     \State $C \gets \textsc{Synthetize}DTGBA(R,target,m)$
-    \If {$C$ \textbf{does not exists}}
+    \If {$C$ \textbf{does not exist}}
      \State $min\_states \gets target + 1$
     \Else
      \State $S \gets C$
@@ -88,7 +88,7 @@ been benchmarked and compared to the first one.\\
        search with the will to be faster.
  \item \textbf{Rise of the accepting sets number:}
        This can be interpreted as the converse of a degeneralization: instead of augmenting the number
-       of states to reduce the number of acceptance sets, we augment the number of acceptance sets in
+       of states to reduce the number of acceptance sets, we increase the number of acceptance sets in
        an attempt to reduce the number of states.
 \end{itemize}
 
@@ -126,14 +126,14 @@ The blue area at the top describes:
 \end{figure}
 
 \noindent As the SAT-based minimization only takes DTBA or DTGBA, the input automaton undergoes some
-transformations. In each tool, a Weak-DBA minimization is attempted. If that succeed, a minimal weak DBA
+transformations. In each tool, a Weak-DBA minimization is attempted. If that succeeds, a minimal weak DBA
 is outputed (looking for transition-based or generalized acceptance will not reduce it further). For
 further details, please read the FORTE'14 paper~\cite{14}.
 
 \subsection{The limits}
 Consider again the default algorithm (~\ref{naive}).
 At each iteration, this algorithm re-encodes the research of a smaller automaton from scratch. Iterations
-after iterations (from $n$ to $n-1$, $n-1$ to $n-2$, etc.) the clauses encoded are almost the same.
+after iterations (from $n$ to $n-1$, $n-1$ to $n-2$, etc.) the encoded clauses are almost the same.
 Therefore, it is a shame that nothing is retained, learned at each iteration. This is where incremental sat
 solving comes in mind.\\
 
@@ -164,7 +164,7 @@ With some automata, the memory usage could grow over 150 Go which is uncommon fo
 
 \section{Detailed explanation of the results to be obtained}
 As said before, the purpose of this internship is to improve the current SAT-based minimization technique.
-This minimization is wanted to be more fast and less greedy in memory consumption.
+This minimization is wanted to be faster and less greedy in memory consumption.
 If you look at the tool chain section above, this internship intervenes in the two SAT minimization
 rectangles (for $m=1$ and $m > 1$).\\
 
@@ -185,13 +185,13 @@ to that. It is a line of approach as many others and the results to obtain can l
    \BState \emph{repeat}:
    \State add clauses to exclude one more state
    \State $C \gets$ Try to solve the new problem and build the new automaton
-   \If {$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \If {$C$ \textbf{does not exist}} \Return $R$\EndIf
    \State $R \gets C$
   \EndProcedure
  \end{algorithmic}
 \end{algorithm}
 
-To do so, Spot needs to be linked to a SAT solving library. The really first task is to know which. I had
+To do so, Spot needs to be linked to a SAT solving library. The really first task is to know which library. I had
 to find the more suitable SAT solver that fills those requirements:
 \begin{itemize}
  \item It must have a compatible licence with Spot's one. Spot is under a GNU General Public Licence 3.
@@ -206,7 +206,7 @@ to find the more suitable SAT solver that fills those requirements:
 \noindent Regarding the memory consumption, the purpose is to identify the most memory-hungry parts of the
 source code and come up with solutions.\\
 
-The results to be obtained can not be more precise than that. There is no precise figure estimating the
+The results to be obtained cannot be more precise than that. There is no precise figure estimating the
 speed to reach for a particular formula or the exact memory consumption to reduce, etc.\\
 
 It is an internship that is part of a research work. By definition, the results are often unpredictable.

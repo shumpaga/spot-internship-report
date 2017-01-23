@@ -1,9 +1,9 @@
 \chapter{Basic concepts}
 \label{basic_concepts}
 Spot essentially manipulates $\omega$-automata which is a variation of finite-state automata (FSA) that runs
-on infinite, rather than finite. Automata theory crop up preety much everywhere in computer science.
-In logic design, natural language processing, system analysis, regular expressions, etc. This
-chapter discuss about some basics of automata theory related to $\omega$-automaton and then, the 
+on infinite, rather than finite. Automata theory crops up pretty much everywhere in computer science:
+logic design, natural language processing, system analysis, regular expressions, etc. This
+chapter discusses about some basics of automata theory related to $\omega$-automaton and then, the
 satisfiability problem.
 
 \section{Automata theory}
@@ -21,18 +21,17 @@ computational problems that can be solved using them.
 \end{figure}
 There are different classes of finate automata. The finite state machine has less computational power than
 some other models of computation such as the Turing machine~\cite{10}. The computational power distinction
-means there are computational tasks that a Turing machine can do but a finite-state automaton (FSA) can
-not.\\
+means there are computational tasks that a Turing machine can do but a finite-state automaton (FSA) cannot.\\
 
-\noindent However, the $\omega$-automata would be a simillar but parallal hierarchy.
+\noindent However, the $\omega$-automata would be a simillar but parallel hierarchy.
 
-\subsection{Atomic preposition}
+\subsection{Atomic proposition}
 An \textit{atomic proposition} is a named Boolean variable that represents a simple property that must be
-true or false. It usually represents some property of a system. They are used to construct temporal logic
+true or false. It usually represents some properties of a system. They are used to construct temporal logic
 formulas~\cite{13} to specify properties of the system.
 
 \subsection{Boolean formula}
-A Boolean formula is formed from \textit{atomic preposition}, the Boolean constants true and false, and
+A Boolean formula is formed from \textit{atomic proposition}, the Boolean constants true and false, and
 standard Boolean operators like and, or, implies, xor, etc.
 
 \subsection{$\omega$-words}
@@ -55,12 +54,12 @@ An $\omega$-automaton is used to represent sets of $\omega$-word.\\
 It is defined by a quintuplet $M=(AP, Q, q_o, X, \alpha)$ where:
 \begin{itemize}
  \item $AP$ is a set of Atomic Proposition,
- \item $Q$ is Q is a finite set. The element of $Q$ are called states of $M$,
+ \item $Q$ is a finite set. The elements of $Q$ are called states of $M$,
  \item $Q_0 \subset Q$ is the set of initial states. If the automaton is deterministic, there is only one
        initial state $q_0 \in Q$. Determinism is a notion defined below.
  \item $X$ can be either a transition function $\delta : Q \times 2^{AP} \rightarrow Q$ (if the automaton is
        deterministic) or a transition relation $\Delta \subset (Q \times 2^{AP} \times Q)$ (if it is not
-       deterministic). 
+       deterministic).
  \item And $\alpha$ is a positive Boolean function over terms of the form $Fin(T)$ or $Inf(T)$ with
        $T \subseteq \Delta$. This is also called the \textit{acceptance condition}.
 \end{itemize}
@@ -72,7 +71,7 @@ different types of acceptance condition, and whether the automata are determinis
 expressive power.
 
 \subsection{Determinism}
-An automaton is said to be \textit{deterministic} iff for each pair of state and symbol ($Q \times 2^{AP}$)
+An automaton is said to be \textit{deterministic} if and only if for each pair of state and symbol ($Q \times 2^{AP}$)
 there is one and only one transition to a next state.\\
 
 \noindent A \textit{non deterministic} automaton allows:
@@ -103,11 +102,11 @@ The definitions of runs and acceptance for deterministic $\omega$-automata are t
 nondeterministic cases.
 
 \subsection{Transition-based vs. State-based acceptance}
-The figure~\ref{fig:omega_aut} has state-based acceptance set, runs are accepting if these visit infinitely
+The figure~\ref{fig:state_based} has state-based acceptance set, runs are accepting if these visit infinitely
 often some state in each acceptance set, etc. Transition-based acceptance means acceptance sets are now
 sets of transitions and runs are accepting if the transitions they visit satisfy the acceptance condition.\\
 
-Using transition based acceptance allows fore more compact automata. Here is two representations of the
+Using transition based acceptance allows fore more compact automata. Here are two representations of the
 formula $GFa$ (infinitely often a):
 
 \begin{figure}[H]
@@ -143,7 +142,7 @@ swapping $t$ and $f$, $\land$ and $\lor$, and $Fin(n)$ and $Inf(n)$.\\
 
 The following table gives an overview of how some classical acceptance condition are encoded. The first
 column gives a name that is more human readable (those names are defined in the HOA~\cite{3} format and
-are also recognized by Spot). The second column give the encoding as a formula.
+are also recognized by Spot). The second column gives the encoding as a formula.
 
 \begin{figure}[H]
  \centering
@@ -153,7 +152,7 @@ are also recognized by Spot). The second column give the encoding as a formula.
 \end{figure}
 
 \subsection{Completeness}
-An automaton is said to be complete iff for each pair of state and input, there is at least one transition
+An automaton is said to be complete if and only if for each pair of state and input, there is at least one transition
 to a next state.
 
 \section{SAT solver}
@@ -173,13 +172,13 @@ following formulas are in DNF:
  \item $A \lor (B \land C)$
  \item $A \lor B \lor \neg C$
 \end{itemize}
-To solve such a formula, as it is a disjuction of cunjunctive clauses, it can be considered as an
+To solve such a formula, as it is a disjunction of cunjunctive clauses, it can be considered as an
 enumeration of possible solutions. Each conjunctive clause is a solution sufficient to evaluate all the DNF
 to true.
 
 \subsection{Conjunctive Normal Forms (CNF)}
-Similarly, a conjunctive normal form is a logical boolean formula that consists of conjunction of clauses
---- clauses being a disjunction of litterals. it can also be described as an AND of ORS and the operator
+Similarly, a conjunctive normal form is a logical Boolean formula that consists of conjunction of clauses
+--- clauses being a disjunction of litterals. It can also be described as an AND of ORS and the operator
 $\neg$ is also authorized, only attached to a litteral.
 \begin{itemize}
  \item $\neg A \land (B \lor C)$
@@ -189,7 +188,7 @@ $\neg$ is also authorized, only attached to a litteral.
 Solving such a formula is not as easy as DNF formulas. SAT solvers can solve these CNF formulas.
 
 \subsection{DIMACS format}
-DIMACS is a file format used to define a boolean expression written in conjunctive normal form. This file
+DIMACS is a file format used to define a Boolean expression written in conjunctive normal form. This file
 can be used as input for SAT solvers --- SAT problems are encoded in a file following DIMACS
 format~\cite{18}. For more details, \textbf{SAT-solving in practice}~\cite{16} is a good introduction to
 SAT solvers.

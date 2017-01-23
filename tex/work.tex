@@ -1,6 +1,6 @@
 \chapter{Contributions to Spot}
 
-This chapter present the different things I have done on Spot during the internship. Might it be
+This chapter presents the different things I have done on Spot during the internship. Might it be
 some algorithms implemented, scripts, display arrangements, benchmarks, results analyzes, etc.
 
 \noindent All the achieved work is presented in a chronological way, to bring out the difficulties
@@ -14,16 +14,16 @@ As a quick reminder, here are the required characteristics for the SAT solver:
  \item effectiveness.
 \end{itemize}
 
-\noindent The project \textbf{fastSAT}~\cite{5} was born to help choose the SAT solver to distribute with
+\noindent The project \textbf{fastSAT}~\cite{5} was born to help to choose the SAT solver to distribute with
 Spot. Until now, SAT-based minimization was performed through an external SAT solver. The default one
 was Glucose~\cite{12} (3.0 version). Therefore, it seems logical to consider Glucose as a possible
 candidate. \textbf{fastSAT}~\cite{5} compared Glucose 4.0~\cite{12} to CryptoMiniSat 5.0.1~\cite{20} and
-PicoSAT 965~\cite{21}. Note that some SAT solvers provide two versions, one parallal and one simple
+PicoSAT 965~\cite{21}. Note that some SAT solvers provide two versions, one parallel and one simple
 essentially because of the SAT competitions. In short, were compared:
 \begin{itemize}
- \item Glucose syrup (parallal) 4.0
+ \item Glucose syrup (parallel) 4.0
  \item Glucose simple 4.0
- \item CryptoMiniSat parallal 5.0.1
+ \item CryptoMiniSat parallel 5.0.1
  \item CryptoMiniSat simple 5.0.1
  \item PicoSAT 965
 \end{itemize}
@@ -63,7 +63,7 @@ easily integrated and harmonised with Spot.
 have a look.
 
 \section{New Satsolver class}
-There was already a satsolver class that is instantiated at the beginning of the SAT-based minimization
+There has already been a satsolver class that is instantiated at the beginning of the SAT-based minimization
 procedures, formerly used to initialize a temporary \textbf{cnf file} (DIMACS~\cite{18}), return
 it and call the external SAT solver. The file writing was directly made by those procedures.
 
@@ -139,7 +139,7 @@ has been considered.\\
 $n$, if the first iteration (which encodes the research of an $\omega$-automaton of size $n-1$) constructs
 an automaton of $k$ ($k \leq n-1$) states \textit{accessible}, then some clauses are added to forbid all the
 entrant transitions of the $n-k-1$ last state. If such automaton is found, the entrant transitions of the
-$n-k-2$ last state are also forbidden, etc. The last SAT problem solved correspond to the minimal
+$n-k-2$ last state are also forbidden, etc. The last solved SAT problem corresponds to the minimal
 automaton.\\
 
 \noindent An interesting thing, as a sideline, is that at the beginning, instead of forbidding the entrant
@@ -149,7 +149,7 @@ clauses were in contradiction with the first rule of the encoding (which stated 
 \cite{14} and \cite{15}.\\
 
 \noindent After this method has been implemented (algorithm \ref{incr1}), a benchmark has been realized to
-compare it to the old default method (algorithm \ref{naive}). For dispay reasons, only a few interesting
+compare it to the old default method (algorithm \ref{naive}). For display reasons, only a few interesting
 lines of the results are displayed in the figure \ref{fig:glu_vs_incr1_short}. Feel free to have a look
 in the \ref{glu_vs_incr1_complete} section of the appendix to see all the results. For each version and
 each formula, two minimizations are attempted, büchi \textit{acceptance set} and
@@ -184,7 +184,7 @@ incremental approach. There is even a case where \textbf{naive incr} never ends 
 is killed.
 
 In order to better compare both version, this generated figure counts the number of times a version is
-better than the other with a tolerance of more or less five percents (5\%). That means: roughly equal times
+better than the other with a tolerance of more or less five per cent (5\%). That means: roughly equal times
 are skipped.
 \begin{figure}[H]
  \centering
@@ -215,9 +215,9 @@ first incremental approach wins when points are located under both lines.
 
 \noindent In light of the above, this incremental approach does not seem to be the most appropriate method.
 This is really surprising. Why all that the SAT solver learned while solving the first traditional encoding
-did not help him to solve quickly the next similar problems?\\
+did not help it to solve quickly the next similar problems?\\
 
-An hypothesis raised is that may be the fact that the size of the problem is never decreased affect it? By
+An hypothesis raised is that may be the fact that the size of the problem is never decreased affects it? By
 restarting the encoding from scratch at each step, the Old SAT-based minimization also restarts with a
 smaller automaton. The smaller the input automaton is, the smaller the SAT problem produced is (with a
 decreasing number of litterals and clauses).\\
@@ -248,11 +248,11 @@ Here is how the algorithm looks like ($s$ means sat\_incr\_steps and stands for 
    \BState \emph{repeat}:
    \State{$n \gets R.nb\_states() $}
    \State{$C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $}
-   \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \If{$C$ \textbf{does not exist}} \Return $R$\EndIf
    \For{$i \in \{0, 1, ..., s-1\}$}
     \State{add clauses to exclude one more state}
     \State{$C \gets$ Try to solve the new problem and build the new automaton}
-    \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
+    \If{$C$ \textbf{does not exist}} \Return $R$\EndIf
     \State{$R \gets C$}
    \EndFor
   \EndProcedure
@@ -289,7 +289,7 @@ and in the appendix \ref{glu_vs_incr2_complete}.
 \end{figure}
 
 The figure \ref{fig:glu_vs_incr2_resume} had the same purpose of the figure
-\ref{fig:glu_vs_incr1_resume}, that means with a tolerance of more or less five percents, couting
+\ref{fig:glu_vs_incr1_resume}, that means with a tolerance of more or less five per cent, counting
 for minDBA and minDTGBA the number of times each version is better than each of the others for
 each formula.\\
 
@@ -317,15 +317,15 @@ because it makes possible to keep the basic rules and mix them with different hy
 
 In our case, the basic rules are obvisouly the traditional encoding and the hypothesis are the removal
 of states. For a better understanding let us consider the following figure (\ref{fig:cnf_assume}). The
-first area represent the traditional encoding. After that, some new variables are introduced
-($x_1$, $x_2$, $x_3$, ...), so that each of them represent an assumption that can be assumed.
+first area represents the traditional encoding. After that, some new variables are introduced
+($x_1$, $x_2$, $x_3$, ...), so that each of them represents an assumption that can be assumed.
 All the assumptions add some clauses to forbid the entrant transitions of one state and implies the
 previous assumption except the first one ($x_1$) that does not have any assumption previously declared.\\
 
 \begin{figure}[H]
  \centering
  \begin{tabular}{|c|c|c|}
- 
+
  \hline
  Areas&File&Some explanations\\
  \hline
@@ -376,10 +376,10 @@ In this way, after a first attempt (just with the basic clauses, no assumptions)
  \item etc.
 \end{itemize}
 
-\noindent As a reminder, the difference between the first two incremental approach
+\noindent As a reminder, the difference between the first two incremental approaches.
 (\ref{approach1} and \ref{approach2}) is that the first one never restarts the encoding and the second
 restarts the encoding depending on a given parameter $s$. In order to
-conserve this possibility, the number of assumptions corresponds to this paramater as well. So this is
+conserve this possibility, the number of assumptions corresponds to this parameter as well. So this is
 how the algorithm works:\\
 
 \begin{algorithm}[H]
@@ -390,11 +390,11 @@ how the algorithm works:\\
    \BState \emph{repeat}:
    \State{$n \gets R.nb\_states() $}
    \State{$C \gets \textsc{Synthetize}DTGBA(R,n-1,m) $}
-   \If{$C$ \textbf{does not exists}} \Return $R$\EndIf
+   \If{$C$ \textbf{does not exist}} \Return $R$\EndIf
    \State{Add $s$ assumptions}
    \State{Assume the last assumption //which assumes every assumptions}
    \State{$C \gets$ Try to solve the new problem and build the new automaton}
-   \If{$C$ \textbf{does not exists}}
+   \If{$C$ \textbf{does not exist}}
     \State{\Return{binary\_search(R, $R.size()-1$ as \textbf{max}, 1 as \textbf{min})}}
    \Else
     \State{$R \gets C$}
@@ -461,7 +461,7 @@ representation.\\
        state\_based\_ : bool \\
        ...
        }{
-       
+
        init(...) : void \\
        get\_transitions(src, cond, dst) : int \\
        get\_acctransitions(src, cond, dst, nacc) \\
@@ -474,12 +474,12 @@ representation.\\
 \end{figure}
 
 Massif~\cite{24}, a heap memory profiler was used with the aim of better evaluating the memory
-consumption. For some display reasons, the results are showed in the \ref{memory_profiling}
+consumption. For some display reasons, the results are shown in the \ref{memory_profiling}
 section of the appendix. Note that as PicoSAT library consume also data, the current version is compared
 with the old one in the same conditions: by using \textbf{Glucose} as external SAT solver.
 
 For the formula $G(F(!a) \lor (F(b) U c))$, we now consume 23 Mb instead of 29,9 Mb. Have in mind that
-this formula start the minimization with an automaton of 8 states and the more bigger the automaton is, the
+this formula starts the minimization with an automaton of 8 states and the more bigger the automaton is, the
 more memory-hungry SAT-based minimization is.
 
 \section{Binary search}
@@ -513,7 +513,7 @@ compares this method to the Old default SAT-based minimization. In conclusion, b
 as the default SAT-based minimization algorithm.
 
 \section{Language map}
-\textbf{language\_map} is a new algorithm that identifies states that recognize the same language. 
+\textbf{language\_map} is a new algorithm that identifies states that recognize the same language.
 It takes in input an $\omega$-automaton and outputs a vector of integer that has exactly the same
 size as the automaton. The number of different values (ignoring occurences) in the vector is the
 total number of recognized languages. States recognizing the same language have the same value.\\
@@ -538,7 +538,7 @@ total number of recognized languages. States recognizing the same language have 
 with the initial state set to state $x$ and $\stcomp{R}$ is the complement of $R$.\\
 
 To vizualize language\_map output, highlight\_languages method has also been implemented. It takes in input
-an $\omega$-automaton and the associated language\_map output and colorize the states.\\
+an $\omega$-automaton and the associated language\_map output and colorizes the states.\\
 
 \begin{figure}[h]
  \centering
@@ -549,8 +549,8 @@ an $\omega$-automaton and the associated language\_map output and colorize the s
 \end{figure}
 
 To come back to SAT-based minimization, by default, the binary search algorithm starts with 1 as
-\textbf{min} value. Our theory is that the minimal automaton can not have less states than the total number
-of languages recognized by each states. Instead of using 1 for \textbf{min} value, we set it to the total
-number of recognized languages. This worked, it improved in general binary search algorithm but in somes
+\textbf{min} value. Our theory is that the minimal automaton cannot have less states than the total number
+of languages recognized by each state. Instead of using 1 for \textbf{min} value, we set it to the total
+number of recognized languages. This worked, it improved in general binary search algorithm but in some
 cases, which are far from negligible, the default binary search method was still better. This leads to a
 new command line option: \textbf{sat-langmap}. This option is not set by default.

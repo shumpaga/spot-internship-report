@@ -38,7 +38,7 @@ Unix tools.\\
    &ltlcross&Cross-compares LTL/PSL-to-automata translators to find bugs (works with arbitrary acceptance
 	     conditions since Spot 2.0)\\
    \hline
-   &ltlgrind&mutates LTL/PSL formulas to help reproduce bugs on smaller ones\\
+   &ltlgrind&mutates LTL/PSL formulas to help to reproduce bugs on smaller ones\\
    &dstar2tgba&converts ltl2dstar automata into Generalized Büchi automata~\cite{14}\\
    &randaut&generates random $\omega$-automata\\
    &autfilt&filters, converts and transforms $\omega$-automata\\
@@ -65,7 +65,7 @@ the code looks homogeneous. Here are some points:
  \item tabs are not used for indentation in files, only spaces, in order to prevent issues with people
  assuming different tab widths.
  \item \#include with angle-brackets refers to public Spot headers (i.e those that will be installed, or
- system headers that are already installed).
+ system headers that have already been installed).
  \item \# include with double quotes refer to private headers that are distributed with Spot.
 \end{itemize}
 
@@ -88,5 +88,5 @@ must actually insert code in its final form.
 \subsection{Adding Tests}
 Any implementation done must be tested and any feature should be documented. For the purpose on one hand
 to avoid regression and on the other hand to ensure the code runs as expected. All tests are located in
-the 'tests' folders. Must of them are written in Python (using the python bindings) or shell script.
+the 'tests' folders. Most of them are written in Python (using the python bindings) or shell script.
 
