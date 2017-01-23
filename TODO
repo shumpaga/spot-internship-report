@@ -1,1 +1,3 @@
-* read all the report carefully
+* Section language_map:
+  Put L(R_x) instead of R_x. We talk about the language recognized.
+  Explain a little bit more the algorithm.
