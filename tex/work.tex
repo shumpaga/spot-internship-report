@@ -526,7 +526,7 @@ total number of recognized languages. States recognizing the same language have 
    \State{$n \gets R.nb\_states()$}
    \For{$i \in \{1, 2, ..., n-1\}$}
     \For{$j \in \{0, 1, ..., i-1\}$}
-     \If{$R_i \cap \stcomp{R_j} \neq \emptyset \land \stcomp{R_i} \cap R_j \neq \emptyset$}
+     \If{$\textit{L}(R_i) \cap \stcomp{\textit{L}(R_j)} \neq \emptyset \land \stcomp{\textit{L}(R_i)} \cap \textit{L}(R_j) \neq \emptyset$}
       \State{$R_i$ and $R_j$ recognize the same language}
      \EndIf
     \EndFor
@@ -535,7 +535,13 @@ total number of recognized languages. States recognizing the same language have 
  \end{algorithmic}
 \end{algorithm}
 \noindent The algorithm \ref{langmap} shows how it works. Note that $R_x$ represents the same automaton as $R$ but
-with the initial state set to state $x$ and $\stcomp{R}$ is the complement of $R$.\\
+with the initial state set to state $x$, $\stcomp{R}$ is the complement of $R$ and $\textit{L}(R)$
+is the language recognized by $R$.\\
+
+Two automaton $R_i$ and $R_j$ recognizes the same language i.e.
+$\textit{L}(R_i) = \textit{L}(R_j)$ if and only if
+$\textit{L}(R_i) \subseteq \textit{L}(R_j)$ and $\textit{L}(R_i) \supseteq \textit{L}(R_j)$. This
+is checked by the line number 5 in algorithm \ref{langmap}.\\
 
 To vizualize language\_map output, highlight\_languages method has also been implemented. It takes in input
 an $\omega$-automaton and the associated language\_map output and colorizes the states.\\
