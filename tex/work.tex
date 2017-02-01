@@ -217,7 +217,7 @@ first incremental approach wins when points are located under both lines.
 This is really surprising. Why all that the SAT solver learned while solving the first traditional encoding
 did not help it to solve quickly the next similar problems?\\
 
-An hypothesis raised is that may be the fact that the size of the problem is never decreased affects it? By
+A hypothesis raised is that may be the fact that the size of the problem is never decreased affects it? By
 restarting the encoding from scratch at each step, the Old SAT-based minimization also restarts with a
 smaller automaton. The smaller the input automaton is, the smaller the SAT problem produced is (with a
 decreasing number of litterals and clauses).\\
@@ -526,7 +526,7 @@ total number of recognized languages. States recognizing the same language have 
    \State{$n \gets R.nb\_states()$}
    \For{$i \in \{1, 2, ..., n-1\}$}
     \For{$j \in \{0, 1, ..., i-1\}$}
-     \If{$\textit{L}(R_i) \cap \stcomp{\textit{L}(R_j)} \neq \emptyset \land \stcomp{\textit{L}(R_i)} \cap \textit{L}(R_j) \neq \emptyset$}
+     \If{$\textit{L}(R_i) \cap \textit{L}(\stcomp{R_j}) \neq \emptyset \land \textit{L}(\stcomp{R_i}) \cap \textit{L}(R_j) \neq \emptyset$}
       \State{$R_i$ and $R_j$ recognize the same language}
      \EndIf
     \EndFor
