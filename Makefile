@@ -1,5 +1,8 @@
 all:
 	pdflatex report.tex
+	bibtex report.aux
+	pdflatex report.tex
+	pdflatex report.tex
 
 clean:
 	rm -rf *.aux
@@ -15,6 +18,7 @@ clean:
 	rm -rf *.bbl
 	rm -rf *.pyg
 	rm -rf *.backup
+	rm -rf *.lof
 
 distclean: clean
 	rm -rf *.pdf
